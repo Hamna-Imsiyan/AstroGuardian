@@ -48,6 +48,155 @@
                 </p>
             </header>
 
+
+<!-- STAGE 3: ASTRONAUT HEALTH DASHBOARD -->
+
+<section class="panel dashboard-panel" id="healthDashboard">
+
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">MISSION HEALTH OVERVIEW</p>
+            <h2>Astronaut Health Dashboard</h2>
+        </div>
+    </div>
+
+    <p id="dashboardLastDate" class="muted">
+        No health check-ins saved yet.
+    </p>
+
+    <!-- LATEST HEALTH MEASUREMENTS -->
+
+    <div class="summary-grid">
+
+        <article class="summary-card">
+            <span class="metric-icon">❤️</span>
+            <p>Heart Rate</p>
+            <div class="metric-value">
+                <strong id="dashHeartRate">—</strong>
+                <small>bpm</small>
+            </div>
+        </article>
+
+        <article class="summary-card">
+            <span class="metric-icon">🌡️</span>
+            <p>Temperature</p>
+            <div class="metric-value">
+                <strong id="dashTemperature">—</strong>
+                <small>°C</small>
+            </div>
+        </article>
+
+        <article class="summary-card">
+            <span class="metric-icon">🌙</span>
+            <p>Sleep</p>
+            <div class="metric-value">
+                <strong id="dashSleep">—</strong>
+                <small>hours</small>
+            </div>
+        </article>
+
+        <article class="summary-card">
+            <span class="metric-icon">🏃</span>
+            <p>Exercise</p>
+            <div class="metric-value">
+                <strong id="dashExercise">—</strong>
+                <small>min</small>
+            </div>
+        </article>
+
+        <article class="summary-card">
+            <span class="metric-icon">🧠</span>
+            <p>Mood</p>
+            <div class="metric-value">
+                <strong id="dashMood">—</strong>
+                <small>/ 5</small>
+            </div>
+        </article>
+
+    </div>
+
+    <!-- INTERACTIVE TREND CHART -->
+
+    <div class="chart-section">
+
+        <h3>Health Trends</h3>
+
+        <p class="muted">
+            Explore how recorded measurements have
+            changed across daily check-ins.
+        </p>
+
+        <div class="chart-controls">
+
+            <div class="field">
+                <label for="metricSelect">
+                    Health Indicator
+                </label>
+
+                <select id="metricSelect">
+                    <option value="heartRate">
+                        Heart Rate
+                    </option>
+                    <option value="temperature">
+                        Body Temperature
+                    </option>
+                    <option value="sleepHours">
+                        Sleep Duration
+                    </option>
+                    <option value="exerciseMinutes">
+                        Exercise Duration
+                    </option>
+                    <option value="mood">
+                        Mood
+                    </option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="rangeSelect">
+                    Time Range
+                </label>
+
+                <select id="rangeSelect">
+                    <option value="7">
+                        Last 7 Check-Ins
+                    </option>
+                    <option value="30">
+                        Last 30 Check-Ins
+                    </option>
+                    <option value="all">
+                        All Records
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+        <p
+            id="dashboardChartMessage"
+            class="muted"
+            role="status"
+        >
+            Save health records to see a trend.
+        </p>
+
+        <div
+            id="dashboardChartBox"
+            class="dashboard-chart"
+            hidden
+        >
+            <canvas
+                id="healthTrendChart"
+                role="img"
+                aria-label="Chart of recorded health measurements over time"
+            ></canvas>
+        </div>
+
+    </div>
+
+</section>
+
+
             <section class="panel">
 
                 <h2>Daily Health Measurements</h2>
@@ -220,6 +369,16 @@
 
     </main>
 
-    <script src="script.js"></script>
+    
+<!-- Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+<!-- Existing Stage 2 functionality -->
+<script src="script.js"></script>
+
+<!-- New Stage 3 dashboard functionality -->
+<script src="dashboard.js"></script>
+
 </body>
 </html>
+

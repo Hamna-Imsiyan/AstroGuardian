@@ -276,6 +276,13 @@ function displayRecords() {
         recordsList.appendChild(card);
 
     });
+
+
+    // Tell the dashboard that records have changed
+    window.dispatchEvent(
+        new Event("astroguardian:records-updated")
+    );
+
 }
 
 // 8. DELETE A RECORD
