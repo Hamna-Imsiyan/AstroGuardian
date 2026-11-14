@@ -1,0 +1,274 @@
+
+/* GENERAL STYLES */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 30px 16px;
+
+    font-family: Arial, sans-serif;
+    color: #eef7ff;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #1c4269 0%,
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #050a17,
+            #0b1a30
+        );
+}
+
+.container {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+h1 {
+    color: #63d8ff;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+p {
+    line-height: 1.6;
+}
+
+.eyebrow {
+    color: #88b5d5;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.muted {
+    color: #a7bdd2;
+}
+
+/* CARDS */
+
+.panel {
+    background: #102138;
+    border: 1px solid #294865;
+    border-radius: 18px;
+
+    padding: 30px;
+    margin-bottom: 22px;
+
+    box-shadow: 0 12px 32px #0003;
+}
+
+/* WELCOME SCREEN */
+
+.welcome {
+    text-align: center;
+    margin-top: 10vh;
+    padding: 50px 30px;
+}
+
+.welcome h1 {
+    font-size: clamp(30px, 6vw, 54px);
+    letter-spacing: 2px;
+}
+
+/* HEADER */
+
+.app-header {
+    margin-bottom: 25px;
+}
+
+.app-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+/* FORM DESIGN */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 25px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #d7e9f7;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px 14px;
+
+    background: #09182b;
+    color: white;
+
+    border: 1px solid #3b5b78;
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #63d8ff;
+    outline-offset: 2px;
+}
+
+.notes-field {
+    margin-top: 22px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* BUTTONS */
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.primary-button,
+#startButton {
+    background: #63d8ff;
+    color: #061627;
+
+    border: none;
+    border-radius: 10px;
+
+    padding: 14px 24px;
+    margin-top: 22px;
+
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.primary-button:hover,
+#startButton:hover {
+    background: #a4eaff;
+}
+
+/* SAVE STATUS */
+
+.status {
+    min-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.status.success {
+    color: #75e4aa;
+}
+
+.status.error {
+    color: #ff9a9a;
+}
+
+/* HEALTH HISTORY */
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+#recordCount {
+    color: #9db9d2;
+    font-size: 13px;
+}
+
+.records-list {
+    padding: 0;
+    margin: 18px 0 0;
+    list-style: none;
+}
+
+.record-card {
+    padding: 18px;
+    margin-bottom: 12px;
+
+    background: #182f4a;
+    border: 1px solid #365473;
+    border-radius: 12px;
+}
+
+.record-card strong {
+    color: #78ddff;
+}
+
+.record-card p {
+    margin: 8px 0;
+    color: #d2e0ef;
+    font-size: 14px;
+}
+
+.delete-button {
+    padding: 8px 15px;
+
+    border: 1px solid #b65f70;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #ffb0bd;
+}
+
+.delete-button:hover {
+    background: #4b2733;
+}
+
+.disclaimer {
+    color: #9db0c4;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+
+    .panel {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .app-header h1 {
+        font-size: 27px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
