@@ -472,3 +472,237 @@ button {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ======================================
+   STAGE 5 - INTERACTIVE BODY MAP
+   ====================================== */
+
+.bodymap-panel {
+    margin-bottom: 25px;
+}
+
+.bodymap-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 25px;
+    margin-top: 25px;
+    align-items: start;
+}
+
+/* HUMAN BODY ILLUSTRATION */
+
+.bodymap-visual {
+    background: #0b1d34;
+    border: 1px solid #31536f;
+    border-radius: 15px;
+    padding: 18px 10px;
+    text-align: center;
+}
+
+.body-figure {
+    position: relative;
+    width: min(100%, 290px);
+    margin: 0 auto;
+}
+
+.body-silhouette {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: #234967;
+    stroke: #84cce8;
+    stroke-width: 3;
+}
+
+.body-silhouette .body-detail {
+    fill: none;
+    stroke: #508eaf;
+    stroke-width: 2;
+}
+
+.bodymap-caption {
+    color: #a7bdd2;
+    font-size: 12px;
+    padding: 0 12px;
+}
+
+/* NUMBERED INTERACTIVE POINTS */
+
+.body-point {
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+    padding: 0;
+
+    border: 2px solid #8ce4ff;
+    border-radius: 50%;
+
+    background: #135575;
+    color: white;
+
+    font-weight: bold;
+    font-size: 16px;
+
+    cursor: pointer;
+    box-shadow: 0 0 12px #31c5f055;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.body-point:hover {
+    background: #167da7;
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+.body-point[aria-pressed="true"] {
+    background: #d5f6ff;
+    color: #08263c;
+    border-color: white;
+    box-shadow: 0 0 20px #52d9ff88;
+}
+
+.body-point:focus-visible,
+.bodymap-topics button:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 3px;
+}
+
+/* POSITION POINTS ON OR NEAR BODY */
+
+.point-brain {
+    top: 8%;
+    left: 66%;
+}
+
+.point-eyes {
+    top: 14%;
+    left: 45%;
+}
+
+.point-heart {
+    top: 35%;
+    left: 44%;
+}
+
+.point-muscles {
+    top: 48%;
+    left: 25%;
+}
+
+.point-bones {
+    top: 72%;
+    left: 53%;
+}
+
+.point-radiation {
+    top: 52%;
+    left: 76%;
+}
+
+/* INFORMATION PANEL */
+
+.bodymap-details {
+    min-width: 0;
+    background: #142b44;
+    border: 1px solid #355b79;
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.bodymap-details h3 {
+    color: #83e3ff;
+    font-size: 22px;
+    margin-top: 8px;
+}
+
+.bodymap-details h4 {
+    margin: 20px 0 8px;
+    font-size: 14px;
+    color: #a9dffa;
+}
+
+.bodymap-details p {
+    color: #d2e0ef;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+#bodyInfoSource {
+    display: inline-block;
+    margin-top: 15px;
+    color: #92e5ff;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* TOPIC SELECTION BUTTONS */
+
+.bodymap-subtitle {
+    margin: 28px 0 15px;
+}
+
+.bodymap-topics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bodymap-topics button {
+    margin: 0;
+    padding: 12px 10px;
+
+    background: #183651;
+    color: #dbefff;
+
+    border: 1px solid #416482;
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.bodymap-topics button:hover {
+    background: #245276;
+}
+
+.bodymap-topics button[aria-pressed="true"] {
+    background: #176184;
+    border-color: #8ce4ff;
+    color: white;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 760px) {
+    .bodymap-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .bodymap-topics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 400px) {
+    .bodymap-topics {
+        grid-template-columns: 1fr;
+    }
+
+    .bodymap-details {
+        padding: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .body-point {
+        transition: none;
+    }
+}

@@ -241,6 +241,242 @@
 </section>
 
 
+<!-- ====================================
+     STAGE 5: INTERACTIVE HUMAN BODY MAP
+     ==================================== -->
+
+<section class="panel bodymap-panel" id="bodyMap">
+
+    <p class="eyebrow">HUMAN SPACEFLIGHT HEALTH</p>
+
+    <h2>Interactive Body Health Explorer</h2>
+
+    <p class="muted">
+        Explore how spaceflight can affect the body.
+        Select a numbered point or topic below.
+    </p>
+
+    <div class="bodymap-layout">
+
+        <!-- LEFT: HUMAN BODY ILLUSTRATION -->
+        <div class="bodymap-visual">
+
+            <div class="body-figure">
+
+                <svg
+                    class="body-silhouette"
+                    viewBox="0 0 320 520"
+                    xmlns="http://www.w3.org/2000/svg"
+                    role="img"
+                    aria-label="Stylized human body silhouette"
+                >
+
+                    <!-- Head -->
+                    <circle
+                        cx="160" cy="66" r="35"
+                    />
+
+                    <!-- Neck -->
+                    <rect
+                        x="145" y="97"
+                        width="30" height="28"
+                        rx="9"
+                    />
+
+                    <!-- Torso -->
+                    <path d="
+                        M 118 121
+                        Q 160 111 202 121
+                        L 219 278
+                        Q 160 297 101 278
+                        Z
+                    "/>
+
+                    <!-- Left arm -->
+                    <path d="
+                        M 119 129
+                        Q 96 119 82 146
+                        L 45 311
+                        Q 40 330 54 332
+                        Q 67 333 72 315
+                        L 110 207
+                        Z
+                    "/>
+
+                    <!-- Right arm -->
+                    <path d="
+                        M 201 129
+                        Q 224 119 238 146
+                        L 275 311
+                        Q 280 330 266 332
+                        Q 253 333 248 315
+                        L 210 207
+                        Z
+                    "/>
+
+                    <!-- Left leg -->
+                    <path d="
+                        M 106 272
+                        L 101 462
+                        Q 100 480 115 480
+                        Q 129 480 132 464
+                        L 160 307
+                        Z
+                    "/>
+
+                    <!-- Right leg -->
+                    <path d="
+                        M 214 272
+                        L 219 462
+                        Q 220 480 205 480
+                        Q 191 480 188 464
+                        L 160 307
+                        Z
+                    "/>
+
+                    <!-- Decorative body detail -->
+                    <path
+                        class="body-detail"
+                        d="M160 126 L160 282"
+                    />
+
+                    <path
+                        class="body-detail"
+                        d="M127 174 Q160 190 193 174"
+                    />
+
+                </svg>
+
+                <!-- Clickable body points -->
+
+                <button
+                    type="button"
+                    class="body-point point-brain"
+                    data-system="brain"
+                    aria-label="Explore brain, mood and sleep"
+                >1</button>
+
+                <button
+                    type="button"
+                    class="body-point point-eyes"
+                    data-system="eyes"
+                    aria-label="Explore eyes and vision"
+                >2</button>
+
+                <button
+                    type="button"
+                    class="body-point point-heart"
+                    data-system="heart"
+                    aria-label="Explore heart and circulation"
+                >3</button>
+
+                <button
+                    type="button"
+                    class="body-point point-muscles"
+                    data-system="muscles"
+                    aria-label="Explore muscles"
+                >4</button>
+
+                <button
+                    type="button"
+                    class="body-point point-bones"
+                    data-system="bones"
+                    aria-label="Explore bones"
+                >5</button>
+
+                <button
+                    type="button"
+                    class="body-point point-radiation"
+                    data-system="radiation"
+                    aria-label="Explore whole-body radiation exposure"
+                >6</button>
+
+            </div>
+
+            <p class="bodymap-caption">
+                Simplified educational illustration.
+                Not a medical examination or diagnosis.
+            </p>
+
+        </div>
+
+        <!-- RIGHT: SELECTED BODY SYSTEM -->
+        <div class="bodymap-details">
+
+            <p class="eyebrow">
+                SELECTED HEALTH TOPIC
+            </p>
+
+            <h3 id="bodyInfoTitle">
+                Select a body system
+            </h3>
+
+            <h4>Spaceflight Considerations</h4>
+            <p id="bodyInfoDescription">
+                Select a point to learn more.
+            </p>
+
+            <h4>Connected Health Records</h4>
+            <p id="bodyInfoMeasurement">
+                Your related measurement will appear here.
+            </p>
+
+            <h4>Educational Guidance</h4>
+            <p id="bodyInfoGuidance">
+                Explore NASA-informed health information.
+            </p>
+
+            <a
+                id="bodyInfoSource"
+                href="https://www.nasa.gov/hrp/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Read NASA Research
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- TOPIC BUTTONS: ALSO WORK ON MOBILE -->
+
+    <h3 class="bodymap-subtitle">
+        Explore Health Topics
+    </h3>
+
+    <div class="bodymap-topics">
+
+        <button type="button" data-system="brain">
+            Brain & Sleep
+        </button>
+
+        <button type="button" data-system="eyes">
+            Eyes & Vision
+        </button>
+
+        <button type="button" data-system="heart">
+            Heart & Circulation
+        </button>
+
+        <button type="button" data-system="muscles">
+            Muscles
+        </button>
+
+        <button type="button" data-system="bones">
+            Bones
+        </button>
+
+        <button type="button" data-system="radiation">
+            Radiation Exposure
+        </button>
+
+    </div>
+
+</section>
+
+
+
             <section class="panel">
 
                 <h2>Daily Health Measurements</h2>
@@ -415,19 +651,24 @@
 
     
 
-<!-- Chart library -->
+
+<!-- Chart.js library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
-<!-- Stage 2: Health form and data storage -->
+<!-- Stage 2 -->
 <script src="script.js"></script>
 
-<!-- Stage 3: Interactive dashboard -->
+<!-- Stage 3 -->
 <script src="dashboard.js"></script>
 
-<!-- Stage 4: Personalized health insights -->
+<!-- Stage 4 -->
 <script src="insights.js"></script>
+
+<!-- Stage 5 -->
+<script src="bodymap.js"></script>
 
 </body>
 </html>
+
 
 
