@@ -475,6 +475,145 @@
 
 </section>
 
+            
+<!-- ======================================
+     STAGE 6: ASTRA VOICE ASSISTANT
+     ====================================== -->
+
+<section class="panel astra-panel" id="astraAssistant">
+
+    <p class="eyebrow">ASTROGUARDIAN AI INTERFACE</p>
+
+    <div class="astra-heading">
+        <div class="astra-avatar">🤖</div>
+
+        <div>
+            <h2>ASTRA Assistant</h2>
+            <p class="muted">
+                Ask about your recorded health data
+                and spaceflight health topics.
+            </p>
+        </div>
+    </div>
+
+    <!-- CHAT MESSAGES -->
+    <div
+        id="astraChat"
+        class="astra-chat"
+        role="log"
+        aria-label="ASTRA conversation"
+        aria-live="polite"
+        aria-relevant="additions"
+    ></div>
+
+    <!-- EXAMPLE QUESTIONS -->
+    <h3>Try Asking ASTRA</h3>
+
+    <div class="astra-suggestions">
+        <button type="button"
+            data-astra-prompt="What is my latest heart rate?">
+            Latest heart rate
+        </button>
+
+        <button type="button"
+            data-astra-prompt="How did my sleep change?">
+            Sleep trend
+        </button>
+
+        <button type="button"
+            data-astra-prompt="How does spaceflight affect bones?">
+            Spaceflight and bones
+        </button>
+
+        <button type="button"
+            data-astra-prompt="Emergency help">
+            Emergency help
+        </button>
+    </div>
+
+    <!-- TEXT INPUT -->
+    <form id="astraForm" class="astra-form">
+
+        <label for="astraQuestion">
+            Ask ASTRA a question
+        </label>
+
+        <div class="astra-input-row">
+            <input
+                id="astraQuestion"
+                type="text"
+                placeholder="Ask about your health records..."
+                maxlength="250"
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit" id="astraSend">
+                Send
+            </button>
+        </div>
+
+    </form>
+
+    <!-- VOICE CONTROLS -->
+    <div class="astra-voice-controls">
+
+        <button type="button" id="astraMic">
+            🎤 Speak to ASTRA
+        </button>
+
+        <button type="button" id="astraStopSpeaking">
+            Stop Voice
+        </button>
+
+        <label class="astra-speech-option">
+            <input
+                type="checkbox"
+                id="astraSpeakReplies"
+            >
+            Read replies aloud
+        </label>
+
+    </div>
+
+    <p
+        id="astraVoiceStatus"
+        class="astra-status"
+        role="status"
+        aria-live="polite"
+    >
+        Voice assistant ready.
+    </p>
+
+    <!-- EMERGENCY NOTICE -->
+    <div
+        id="astraEmergency"
+        class="astra-emergency"
+        role="alert"
+        hidden
+    >
+        <h3>Emergency Support Demonstration</h3>
+
+        <p>
+            Alert your designated crew medical
+            officer immediately and follow approved
+            onboard emergency procedures.
+        </p>
+
+        <p>
+            This prototype does not send emergency
+            alerts, contact mission control,
+            diagnose conditions, or provide treatment.
+        </p>
+    </div>
+
+    <p class="astra-disclaimer">
+        Educational prototype. Use fictional health
+        data only. Voice recognition may use an online
+        service depending on your browser.
+    </p>
+
+</section>
 
 
             <section class="panel">
@@ -652,20 +791,24 @@
     
 
 
-<!-- Chart.js library -->
+
+<!-- External chart library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
-<!-- Stage 2 -->
+<!-- Stage 2: Form and localStorage -->
 <script src="script.js"></script>
 
-<!-- Stage 3 -->
+<!-- Stage 3: Charts -->
 <script src="dashboard.js"></script>
 
-<!-- Stage 4 -->
+<!-- Stage 4: Personalized comparisons -->
 <script src="insights.js"></script>
 
-<!-- Stage 5 -->
+<!-- Stage 5: Interactive body map -->
 <script src="bodymap.js"></script>
+
+<!-- Stage 6: ASTRA Assistant -->
+<script src="astra.js"></script>
 
 </body>
 </html>
