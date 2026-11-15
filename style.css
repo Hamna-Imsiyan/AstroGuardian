@@ -910,3 +910,231 @@ button {
         max-width: 95%;
     }
 }
+
+
+/* =====================================
+   STAGE 7 - EMERGENCY SUPPORT
+   ===================================== */
+
+.emergency-toolbar {
+    margin-bottom: 24px;
+}
+
+.emergency-main-button {
+    background: #b63544;
+    color: white;
+
+    border: 2px solid #ff9ca8;
+    border-radius: 12px;
+
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.emergency-main-button:hover {
+    background: #d34555;
+}
+
+.emergency-toolbar p {
+    color: #b9c9d8;
+    font-size: 12px;
+}
+
+.emergency-panel {
+    border: 2px solid #d45c69;
+    background: #231c2d;
+}
+
+.emergency-panel h2 {
+    color: #ffb5bc;
+}
+
+.emergency-warning {
+    background: #502631;
+    color: #ffe0e3;
+
+    border-left: 4px solid #ff8290;
+    border-radius: 8px;
+
+    padding: 16px;
+    font-weight: bold;
+}
+
+.emergency-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.emergency-actions button {
+    margin: 0;
+    padding: 12px 16px;
+
+    border: 1px solid #be7180;
+    border-radius: 9px;
+
+    background: #69313e;
+    color: white;
+
+    cursor: pointer;
+}
+
+.emergency-actions button:hover {
+    background: #8b4050;
+}
+
+.emergency-checklist {
+    margin-top: 22px;
+    padding: 20px;
+
+    background: #15273b;
+    border: 1px solid #526c82;
+    border-radius: 12px;
+}
+
+.emergency-checklist h3 {
+    color: #ffced3;
+}
+
+.emergency-checklist li {
+    padding: 7px 0;
+    line-height: 1.7;
+}
+
+.emergency-note {
+    margin-top: 18px;
+    color: #b7c4d2;
+    font-size: 12px;
+}
+
+#emergencyStatus {
+    color: #c6e7ff;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .emergency-actions {
+        flex-direction: column;
+    }
+
+    .emergency-actions button {
+        width: 100%;
+    }
+}
+
+
+
+/* =====================================
+   STAGE 8 - WELLNESS MISSIONS
+   ===================================== */
+
+.wellness-panel {
+    margin-bottom: 25px;
+}
+
+.wellness-progress {
+    margin: 25px 0;
+}
+
+.wellness-progress-track {
+    width: 100%;
+    height: 12px;
+    overflow: hidden;
+
+    background: #29435d;
+    border-radius: 20px;
+}
+
+#wellnessProgressBar {
+    width: 0%;
+    height: 100%;
+
+    background: #66dcb4;
+    border-radius: 20px;
+
+    transition: width 0.3s ease;
+}
+
+.wellness-missions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.wellness-task {
+    padding: 20px;
+    background: #172e49;
+    border: 1px solid #365675;
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.wellness-task h3 {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+.wellness-task p {
+    font-size: 13px;
+    color: #b9cde0;
+    flex: 1;
+}
+
+.wellness-task button {
+    margin: 12px 0;
+    padding: 11px 14px;
+
+    background: #255b7b;
+    color: white;
+
+    border: 1px solid #76bedf;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.wellness-task strong {
+    color: #8be5b8;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.wellness-badge {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+
+    background: #273344;
+    border: 1px solid #7c8c9e;
+}
+
+.wellness-badge h3 {
+    color: #ffdc8c;
+}
+
+.offline-panel {
+    border: 1px solid #4b8e8b;
+}
+
+#offlineStatus {
+    color: #89e0c4;
+    font-weight: bold;
+}
+
+@media (max-width: 760px) {
+    .wellness-missions {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #wellnessProgressBar {
+        transition: none;
+    }
+}

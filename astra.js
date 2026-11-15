@@ -306,6 +306,11 @@ function astraGenerateAnswer(userQuestion) {
     if (emergencyWords.test(question)) {
 
         astraEmergency.hidden = false;
+        
+        // Open the Stage 7 emergency support panel
+    window.dispatchEvent(
+        new Event("astroguardian:emergency-request")
+    );
 
         return "Emergency support requested. " +
             "Alert your designated crew medical officer " +

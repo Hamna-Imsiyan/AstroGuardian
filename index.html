@@ -48,6 +48,126 @@
                 </p>
             </header>
 
+            
+<!-- =====================================
+     STAGE 7: EMERGENCY SUPPORT
+     ===================================== -->
+
+<div class="emergency-toolbar">
+
+    <button
+        type="button"
+        id="emergencyOpen"
+        class="emergency-main-button"
+    >
+        🚨 Open Emergency Support
+    </button>
+
+    <p>
+        Training simulation only.
+        No actual emergency alerts are sent.
+    </p>
+
+</div>
+
+<section
+    id="emergencyPanel"
+    class="panel emergency-panel"
+    hidden
+>
+
+    <p class="eyebrow">
+        ASTROGUARDIAN / EMERGENCY SUPPORT
+    </p>
+
+    <h2>Emergency Assistance</h2>
+
+    <p class="emergency-warning">
+        SIMULATION ONLY — This application cannot
+        dispatch help, diagnose conditions or
+        contact mission control.
+    </p>
+
+    <p>
+        Select a simulated mission incident to
+        display basic escalation guidance.
+        Real missions require approved onboard
+        procedures and trained medical personnel.
+    </p>
+
+    <div class="field">
+
+        <label for="emergencyScenario">
+            Select Incident Type
+        </label>
+
+        <select id="emergencyScenario">
+
+            <option value="medical">
+                Astronaut Medical Emergency
+            </option>
+
+            <option value="radiation">
+                Radiation Warning
+            </option>
+
+            <option value="communications">
+                Medical Communications Unavailable
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="emergency-actions">
+
+        <button
+            type="button"
+            id="emergencyChecklistButton"
+        >
+            Show Training Checklist
+        </button>
+
+        <button
+            type="button"
+            id="emergencySpeakButton"
+        >
+            🔊 Read Guidance
+        </button>
+
+        <button
+            type="button"
+            id="emergencyClose"
+        >
+            Close
+        </button>
+
+    </div>
+
+    <div class="emergency-checklist">
+
+        <h3 id="emergencyTitle">
+            Medical Emergency
+        </h3>
+
+        <ol id="emergencySteps"></ol>
+
+    </div>
+
+    <p
+        id="emergencyStatus"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+    <p class="emergency-note">
+        This is a demonstration of checklist access,
+        not an operational spacecraft medical protocol.
+        All medical actions must follow approved
+        mission procedures.
+    </p>
+
+</section>
 
 <!-- STAGE 3: ASTRONAUT HEALTH DASHBOARD -->
 
@@ -616,6 +736,149 @@
 </section>
 
 
+<!-- =====================================
+     STAGE 8: WELLNESS MISSIONS
+     ===================================== -->
+
+<section class="panel wellness-panel" id="wellnessPanel">
+
+    <p class="eyebrow">
+        MISSION WELLNESS PROGRAM
+    </p>
+
+    <h2>Daily Wellness Missions</h2>
+
+    <p class="muted">
+        Complete educational activities to
+        earn your daily mission badge.
+    </p>
+
+    <div class="wellness-progress">
+
+        <p id="wellnessProgressText">
+            0 of 3 missions completed
+        </p>
+
+        <div class="wellness-progress-track">
+            <div id="wellnessProgressBar"></div>
+        </div>
+
+    </div>
+
+    <div class="wellness-missions">
+
+        <article class="wellness-task">
+
+            <h3>1. Daily Health Check-In</h3>
+
+            <p>
+                Record today's fictional health
+                measurements using AstroGuardian.
+            </p>
+
+            <strong id="wellnessRecordStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+        <article class="wellness-task">
+
+            <h3>2. Review Your Health Trends</h3>
+
+            <p>
+                Review how measurements have
+                changed across previous check-ins.
+            </p>
+
+            <button
+                type="button"
+                id="wellnessReviewTrend"
+            >
+                Review Trends
+            </button>
+
+            <strong id="wellnessTrendStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+        <article class="wellness-task">
+
+            <h3>3. Explore the Human Body</h3>
+
+            <p>
+                Explore a spaceflight health topic
+                using the interactive body map.
+            </p>
+
+            <button
+                type="button"
+                id="wellnessExploreBody"
+            >
+                Open Body Explorer
+            </button>
+
+            <strong id="wellnessBodyStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+    </div>
+
+    <div class="wellness-badge">
+
+        <h3>🏅 Mission Achievement</h3>
+
+        <p id="wellnessBadge">
+            Complete all three missions to
+            unlock the Mission Health Explorer badge.
+        </p>
+
+    </div>
+
+    <p
+        id="wellnessStatus"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+    <p class="muted">
+        Wellness missions are educational activities,
+        not medical treatment or prescribed exercise.
+    </p>
+
+</section>
+
+<!-- OFFLINE CAPABILITY STATUS -->
+
+<section class="panel offline-panel">
+
+    <h2>Offline Mission Support</h2>
+
+    <p>
+        AstroGuardian can cache its application
+        files so the demo can be opened again
+        without a network connection.
+    </p>
+
+    <p
+        id="offlineStatus"
+        role="status"
+        aria-live="polite"
+    >
+        Checking offline availability...
+    </p>
+
+    <p class="muted">
+        Voice recognition and external NASA research
+        links may still require internet access.
+    </p>
+
+</section>
+
             <section class="panel">
 
                 <h2>Daily Health Measurements</h2>
@@ -792,26 +1055,30 @@
 
 
 
-<!-- External chart library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
-<!-- Stage 2: Form and localStorage -->
+<!-- LOCAL CHART LIBRARY -->
+<script src="./vendor/chart.umd.min.js"></script>
+
+<!-- STAGE 2 -->
 <script src="script.js"></script>
 
-<!-- Stage 3: Charts -->
+<!-- STAGE 3 -->
 <script src="dashboard.js"></script>
 
-<!-- Stage 4: Personalized comparisons -->
+<!-- STAGE 4 -->
 <script src="insights.js"></script>
 
-<!-- Stage 5: Interactive body map -->
+<!-- STAGE 5 -->
 <script src="bodymap.js"></script>
 
-<!-- Stage 6: ASTRA Assistant -->
+<!-- STAGE 6 -->
 <script src="astra.js"></script>
+
+<!-- STAGE 7 -->
+<script src="emergency.js"></script>
+
+<!-- STAGE 8 -->
+<script src="wellness.js"></script>
 
 </body>
 </html>
-
-
-
