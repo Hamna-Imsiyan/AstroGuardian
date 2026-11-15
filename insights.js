@@ -232,8 +232,8 @@ function renderPersonalizedInsights() {
         resultLabel.className = "insight-label";
 
         resultLabel.textContent = hasNoticeableChange
-            ? "Noticeable variation (demo rule)"
-            : "Below demo variation marker";
+            ? "Above comparison marker"
+            : "Below comparison marker";
 
 
         // Add all elements to the card
@@ -255,17 +255,16 @@ function renderPersonalizedInsights() {
 
         insightsSummary.textContent =
             noticeableChanges +
-            " indicator(s) differ noticeably from their " +
-            "recent recorded averages under the " +
-            "demonstration rules. Review the trends and " +
-            "measurement context. This is not a diagnosis.";
+            " indicator(s) meet the comparison markers " +
+            "relative to the previous three check-ins. " +
+            "Review the recorded changes and measurement conditions.";
 
     } else {
 
         insightsSummary.textContent =
-            "No large differences were found using " +
-            "the current demonstration comparison rules. " +
-            "This does not establish medical safety.";
+            "All recorded differences are below the " +
+            "current comparison markers. Review each " +
+            "measurement alongside your recent records.";
 
     }
 
@@ -282,7 +281,4 @@ window.addEventListener(
 
 // 10. DISPLAY INSIGHTS WHEN THE APP STARTS
 
-startButton.addEventListener(
-    "click",
-    renderPersonalizedInsights
-);
+renderPersonalizedInsights();

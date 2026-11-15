@@ -1,0 +1,150 @@
+/* The supplied flat image turns in perspective; topic controls stay screen-facing. */
+.bodymap-visual.body-viewer {
+    min-width: 0;
+    padding: 20px 20px 18px;
+    overflow: hidden;
+    background-color: #0c1830;
+    background-image:
+        radial-gradient(circle at 12% 24%, #b9e9ff8c 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 18%, #b9e9ff70 0 1px, transparent 1.5px),
+        radial-gradient(circle at 18% 67%, #87aaff70 0 1px, transparent 1.5px),
+        radial-gradient(circle at 80% 73%, #b9e9ff70 0 1px, transparent 1.5px),
+        radial-gradient(ellipse at 50% 35%, #16345d80, transparent 65%);
+    border: 1px solid #75dcff33;
+    border-radius: 16px;
+    color: #e0edff;
+    text-align: center;
+}
+.body-viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    text-align: left;
+    color: #9eb7d4;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: .12em;
+}
+#bodyOrientation {
+    padding: 5px 9px;
+    border-radius: 6px;
+    border: 1px solid #75dcff33;
+    background: #10233f;
+    color: #75dcff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+}
+.body-viewer .body-figure {
+    position: relative;
+    width: min(100%, 300px);
+    height: 440px;
+    margin: 12px auto 0;
+    overflow: hidden;
+    perspective: 1000px;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    border-radius: 8px;
+}
+.body-viewer .body-figure.is-dragging { cursor: grabbing; }
+.body-viewer .body-reference-image {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+    /* Preserve the supplied artwork; screen removes its inverted white ground. */
+    filter: invert(1);
+    mix-blend-mode: screen;
+    transform: rotateY(var(--body-angle, 0deg));
+    pointer-events: none;
+    transition: transform 300ms ease;
+}
+.body-viewer .is-dragging .body-reference-image { transition: none; }
+.body-viewer .body-point {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0;
+    border: 2px solid #b9edff;
+    background: #173c71;
+    color: #f2f9ff;
+    font-size: 13px;
+    font-weight: 650;
+    box-shadow: 0 0 14px #75dcff24;
+    transition: background 160ms ease, box-shadow 160ms ease;
+    z-index: 1;
+}
+.body-viewer .body-point[hidden] { display: none !important; }
+.body-viewer .body-point:hover,
+.body-viewer .body-point[aria-pressed="true"] {
+    background: #75dcff;
+    color: #050915;
+    border-color: #d9f6ff;
+    box-shadow: 0 0 0 5px #75dcff24, 0 0 20px #75dcff35;
+    transform: translate(-50%, -50%);
+}
+.body-viewer .body-figure:focus-visible,
+.body-viewer .body-point:focus-visible,
+.body-viewer .body-rotation-controls button:focus-visible {
+    outline: 3px solid #75dcff;
+    outline-offset: 3px;
+}
+.body-rotation-help {
+    margin: 4px 0 12px;
+    font-size: 11px;
+    line-height: 1.7;
+    color: #a0b6d1;
+}
+.body-rotation-controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.body-rotation-controls button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 12px;
+    margin: 0;
+    border: 1px solid #87aaff55;
+    border-radius: 7px;
+    background: #101f3b;
+    color: #dce9ff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 160ms ease, transform 160ms ease;
+}
+.body-rotation-controls button:hover { background: #1b355b; border-color: #75dcff; transform: translateY(-1px); }
+.body-rotation-controls button:active { transform: translateY(1px); }
+.body-rotation-controls button[aria-pressed="true"] { color: #75dcff; background: #13324e; border-color: #75dcff; }
+.body-viewer-disclaimer {
+    margin: 12px 0 0;
+    color: #93a9c5;
+    font-size: 10px;
+    line-height: 1.7;
+}
+@media (max-width: 600px) {
+    .bodymap-visual.body-viewer { padding: 16px 12px; }
+    .body-viewer .body-figure { height: 400px; }
+    .body-viewer .body-point { width: 44px; height: 44px; min-height: 44px; }
+    .body-rotation-controls { gap: 8px; }
+    .body-rotation-controls button { padding: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .body-viewer .body-reference-image,
+    .body-viewer .body-point,
+    .body-viewer .body-rotation-controls button { transition: none; }
+}

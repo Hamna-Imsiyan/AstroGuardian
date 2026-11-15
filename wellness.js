@@ -86,7 +86,11 @@ function loadWellnessProgress() {
                 progress &&
                 progress.date === wellnessToday()
             ) {
-                return progress;
+                return {
+                    date: progress.date,
+                    trendReviewed: progress.trendReviewed === true,
+                    bodyExplored: progress.bodyExplored === true
+                };
             }
         }
 
@@ -111,6 +115,7 @@ function saveWellnessProgress() {
             WELLNESS_STORAGE_KEY,
             JSON.stringify(wellnessProgress)
         );
+        return true;
 
     } catch (error) {
 
@@ -118,6 +123,7 @@ function saveWellnessProgress() {
 
         wellnessStatus.textContent =
             "Progress could not be saved in this browser.";
+        return false;
     }
 }
 
@@ -201,7 +207,7 @@ document.getElementById(
         healthRecords.length < 2) {
 
         wellnessStatus.textContent =
-            "Save at least two fictional check-ins " +
+            "Save at least two check-ins " +
             "before reviewing a trend.";
 
         return;
@@ -209,17 +215,14 @@ document.getElementById(
 
     wellnessProgress.trendReviewed = true;
 
-    saveWellnessProgress();
+    const saved = saveWellnessProgress();
     renderWellness();
 
     wellnessStatus.textContent =
-        "Trend review activity completed.";
+        saved ? "Trend review activity completed." :
+            "Trend reviewed for this session. Browser storage could not save progress.";
 
-    document.getElementById(
-        "healthDashboard"
-    ).scrollIntoView({
-        behavior: "smooth"
-    });
+    openAstroPage("trends");
 });
 
 
@@ -229,11 +232,7 @@ document.getElementById(
     "wellnessExploreBody"
 ).addEventListener("click", function () {
 
-    document.getElementById(
-        "bodyMap"
-    ).scrollIntoView({
-        behavior: "smooth"
-    });
+    openAstroPage("body");
 
     wellnessStatus.textContent =
         "Select a body topic to complete this activity.";
@@ -283,6 +282,7 @@ const offlineStatus = document.getElementById(
 );
 
 function updateOfflineStatus() {
+    if (!offlineStatus) return;
 
     if (!navigator.onLine) {
 
@@ -313,6 +313,13 @@ function updateOfflineStatus() {
 // Register the service worker
 
 window.addEventListener("load", function () {
+    if (!offlineStatus) return;
+
+    if (window.location.protocol === "file:") {
+        offlineStatus.textContent =
+            "Local file preview. Serve this app on localhost or HTTPS to enable offline caching.";
+        return;
+    }
 
     if (!("serviceWorker" in navigator)) {
 
@@ -370,3 +377,6 @@ window.addEventListener(
     "offline",
     updateOfflineStatus
 );
+
+window.addEventListener("astroguardian:page-changed", renderWellness);
+updateOfflineStatus();

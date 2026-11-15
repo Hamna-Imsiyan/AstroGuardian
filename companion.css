@@ -1,0 +1,256 @@
+/* Transparent ASTRA artwork, lit against the station's dark workspace. */
+.companion-dock {
+    color-scheme: dark;
+    position: fixed;
+    right: 26px;
+    bottom: 20px;
+    z-index: 80;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 12px;
+    max-width: calc(100vw - 32px);
+}
+.companion-launcher {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-height: 64px;
+    margin: 0;
+    padding: 4px 18px 4px 2px;
+    border: 1px solid #6ba2ce;
+    border-radius: 40px;
+    background: #101e32ed;
+    color: #edf7ff;
+    box-shadow: 0 8px 28px #0009, 0 0 24px #71c7ff14;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+}
+.companion-launcher:hover { background: #1a3450; border-color: #b5e4ff; transform: translateY(-2px); }
+.companion-launcher:active { transform: translateY(1px); }
+.companion-launcher-label { font-size: 13px; font-weight: 650; white-space: nowrap; }
+.companion-launcher-label > span { margin-left: 8px; font-size: 18px; color: #b7e5ff; }
+.companion-character { position: relative; flex-shrink: 0; transform-origin: center 75%; }
+.companion-character img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    mix-blend-mode: normal;
+    filter: drop-shadow(0 5px 12px #7bd6ff38);
+    pointer-events: none;
+}
+.companion-launcher-art { width: 74px; height: 74px; margin-top: -18px; }
+.companion-auto-motion .companion-character { animation: companion-idle 5.6s ease-in-out infinite; }
+.companion-auto-motion .companion-character.is-waving { animation: companion-wave 2.2s ease-in-out 1; }
+.companion-auto-motion .companion-character.is-jumping { animation: companion-jump 1.1s ease-in-out 2; }
+.companion-auto-motion .companion-character.is-floating { animation: companion-float 4.2s ease-in-out 1; }
+.companion-nudge {
+    position: relative;
+    width: min(320px, calc(100vw - 32px));
+    padding: 22px 20px 16px;
+    background: #0e1c30f5;
+    color: #edf6ff;
+    border: 1px solid #4f7398;
+    border-radius: 16px 16px 3px 16px;
+    box-shadow: 0 10px 38px #0008;
+    backdrop-filter: blur(16px);
+}
+.companion-nudge[hidden] { display: none; }
+.companion-nudge p { margin: 10px 0 12px; font-size: 15px; line-height: 1.55; color: #edf6ff; }
+.companion-eyebrow { display: block; color: #a8d7fa; font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+.companion-nudge .companion-nudge-dismiss, .companion-close {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0;
+    background: transparent;
+    color: #dcefff;
+    border: 0;
+    border-radius: 50%;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+.companion-close:hover, .companion-nudge-dismiss:hover { background: #263d59; }
+.companion-nudge .companion-nudge-dismiss { position: absolute; right: 0; top: 0; }
+.companion-nudge-actions { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.companion-nudge-actions button {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #b4e1ff;
+    font-size: 12px;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+}
+.companion-nudge-actions button:last-child { color: #b1c3da; font-size: 11px; font-weight: 450; }
+.companion-nudge-actions button:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.companion-dialog {
+    color-scheme: dark;
+    position: fixed;
+    inset: auto 24px 24px auto;
+    width: min(640px, calc(100vw - 48px));
+    max-width: calc(100vw - 32px);
+    max-height: min(860px, calc(100dvh - 48px));
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #486b91;
+    border-radius: 20px;
+    background: #091426f5;
+    color: #edf6ff;
+    box-shadow: 0 24px 100px #000b, 0 0 60px #6fc9ff12;
+    backdrop-filter: blur(24px);
+}
+.companion-dialog::backdrop { background: #020611a6; backdrop-filter: blur(5px); }
+body.companion-dialog-open { overflow: hidden; }
+.companion-dialog-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 60px;
+    padding: 8px 13px 8px 24px;
+    border-bottom: 1px solid #2e4565;
+    background: #0d1c30;
+}
+.companion-dialog-bar > div { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.companion-online-dot { width: 7px; height: 7px; border-radius: 50%; background: #a3e1ff; box-shadow: 0 0 10px #8bd7ff88; }
+.companion-dialog-content { max-height: min(780px, calc(100dvh - 120px)); overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #4d6c91 #0a1426; }
+.companion-dialog .astra-panel {
+    display: block !important;
+    min-height: 0;
+    margin: 0;
+    padding: 22px 24px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+.companion-dialog h2, .companion-dialog h3 { color: #edf6ff; }
+.companion-dialog label { color: #d3e5fa; }
+.companion-dialog .muted, .companion-dialog .eyebrow { color: #b3c9e1; }
+.companion-dialog .astra-panel > .eyebrow, .companion-dialog .astra-heading { display: none; }
+.companion-dialog .astra-chat { min-height: 150px; max-height: 230px; height: auto; padding: 12px; background: #070f1e; border: 1px solid #2f496b; border-radius: 10px; }
+.companion-dialog .astra-message { max-width: 95%; border-radius: 9px; padding: 11px 13px; }
+.companion-dialog .astra-message strong { color: #acdbff; font-size: 10px; letter-spacing: .1em; }
+.companion-dialog .astra-message p { color: inherit; font-size: 14px; line-height: 1.6; }
+.companion-dialog .astra-bot { background: #142841; color: #e1efff; }
+.companion-dialog .astra-user { background: #245581; color: #fff; }
+.companion-dialog .astra-user strong { color: #d5edff; }
+.companion-dialog .astra-suggestions { gap: 6px; }
+.companion-dialog .astra-suggestions button,
+.companion-dialog .astra-voice-controls > button {
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid #557c9f;
+    border-radius: 7px;
+    background: #18334d;
+    color: #edf7ff;
+    font-size: 12px;
+    font-weight: 550;
+}
+.companion-dialog .astra-suggestions button:hover,
+.companion-dialog .astra-voice-controls > button:not(:disabled):hover { background: #234866; border-color: #92d2ff; transform: translateY(-1px); }
+.companion-dialog .astra-input-row { display: flex; flex-direction: row; gap: 8px; }
+.companion-dialog .astra-input-row input { width: 0; min-width: 0; flex: 1; background: #070f1d; color: #edf6ff; border: 1px solid #567799; }
+.companion-dialog .astra-input-row input::placeholder { color: #a1b4ce; opacity: 1; }
+.companion-dialog .astra-input-row button { min-height: 46px; padding: 10px 20px; border: 1px solid #d8efff; background: #b0ddff; color: #061326; font-weight: 750; box-shadow: 0 3px 14px #7abfff22; }
+.companion-dialog .astra-input-row button:hover { background: #d0edff; transform: translateY(-1px); }
+.companion-dialog .astra-form > label { font-size: 12px; }
+.companion-dialog .astra-form { margin: 14px 0 0; }
+.companion-support-options { margin-top: 12px; }
+.companion-support-options > summary {
+    display: list-item;
+    min-height: 44px;
+    padding: 13px 14px;
+    border: 1px solid #3b597d;
+    border-radius: 7px;
+    background: #122238;
+    color: #d6eaff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style-position: inside;
+}
+.companion-support-options > summary:hover { background: #1b3450; border-color: #76a9d3; }
+.companion-support-options > summary::marker { color: #a5d9ff; }
+.companion-support-options > h3 { font-size: 13px; margin: 16px 0 8px; }
+.companion-support-options .companion-preferences { margin-top: 12px; padding-top: 10px; }
+.companion-dialog .astra-voice-controls { gap: 6px 12px; }
+.companion-dialog .astra-voice-controls > button { padding: 8px 10px; }
+.companion-dialog .astra-speech-option { font-size: 12px; min-height: 44px; }
+.companion-dialog .astra-speech-option input,
+.companion-preferences input { width: 17px; min-width: 17px; height: 17px; min-height: 17px; padding: 0; margin: 0; flex: 0 0 17px; accent-color: #adddff; }
+.companion-dialog .astra-status, .companion-dialog .astra-disclaimer { font-size: 10.5px; line-height: 1.55; color: #b1c4dd; }
+.companion-dialog .astra-disclaimer { margin: 10px 0 0; }
+.companion-dialog .astra-emergency { background: #35202d; color: #ffd7df; border-color: #be788c; }
+.companion-dialog .astra-emergency h3, .companion-dialog .astra-emergency p { color: #ffd7df; }
+.companion-intro {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 12px;
+    padding: 4px 12px 6px 4px;
+    border-radius: 12px;
+    background: radial-gradient(ellipse at 13% 65%, #18355488, transparent 65%);
+}
+.companion-portrait { width: 114px; height: 114px; }
+.companion-intro-copy { min-width: 0; }
+.companion-intro-copy p { max-width: 300px; margin: 9px 0 0; color: #f0f7ff; font-size: 18px; line-height: 1.45; }
+.companion-dialog .companion-conversation-prompts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0 0 14px; }
+.companion-dialog .companion-conversation-prompts button { min-width: 0; padding: 8px; line-height: 1.4; }
+.companion-preferences { margin-top: 22px; padding-top: 16px; border-top: 1px solid #365174; }
+.companion-preferences label { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; color: #d3e5fa; font-size: 12px; }
+.companion-preferences p { margin: 8px 0 0; color: #b1c4dd; font-size: 11px; line-height: 1.6; }
+.companion-dock button:focus-visible, .companion-dialog button:focus-visible, .companion-dialog input:focus-visible, .companion-preferences input:focus-visible, .companion-support-options > summary:focus-visible { outline: 3px solid #a3e1ff; outline-offset: 3px; }
+.companion-dock button, .companion-dialog button { font-family: inherit; transition: background-color .18s, border-color .18s, transform .18s; }
+.companion-motion-paused .companion-character, .companion-motion-paused .companion-character img { animation: none !important; }
+@keyframes companion-idle {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-6px) rotate(1deg); }
+}
+@keyframes companion-wave {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    20%, 55% { transform: translateY(-4px) rotate(-9deg); }
+    36%, 72% { transform: translateY(-6px) rotate(8deg); }
+    88% { transform: translateY(-2px) rotate(-3deg); }
+}
+@keyframes companion-jump {
+    0%, 100% { transform: translateY(0) scale(1); }
+    14% { transform: translateY(3px) scale(1.04, .94); }
+    46% { transform: translateY(-20px) scale(.98, 1.02); }
+    76% { transform: translateY(0) scale(1.04, .95); }
+}
+@keyframes companion-float {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    25% { transform: translate(-9px, -10px) rotate(-6deg); }
+    65% { transform: translate(8px, -17px) rotate(6deg); }
+}
+@media (max-width: 640px) {
+    .companion-dock { right: 16px; bottom: 14px; }
+    .companion-launcher { min-height: 60px; width: 60px; padding: 2px; }
+    .companion-launcher-art { width: 56px; height: 56px; margin-top: -8px; }
+    .companion-launcher-label { display: none; }
+    .companion-dialog { inset: auto 8px 8px; width: calc(100vw - 16px); max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); border-radius: 16px; }
+    .companion-dialog-content { max-height: calc(100dvh - 80px); }
+    .companion-dialog .astra-panel { padding: 16px; }
+    .companion-dialog .astra-chat { min-height: 140px; max-height: 190px; }
+    .companion-dialog .companion-conversation-prompts button { padding: 7px 4px; font-size: 11px; }
+    .companion-intro { gap: 12px; padding: 4px 8px 4px 0; }
+    .companion-portrait { width: 88px; height: 96px; }
+    .companion-intro-copy p { font-size: 15px; }
+    .companion-eyebrow { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .companion-character, .companion-character img { animation: none !important; transform: none !important; }
+    .companion-dock button, .companion-dialog button { transition: none; }
+}

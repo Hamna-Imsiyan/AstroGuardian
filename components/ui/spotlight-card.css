@@ -1,0 +1,98 @@
+/* Keep existing card geometry, backgrounds, content positioning and focus rings. */
+[data-spotlight] {
+    position: relative;
+    isolation: isolate;
+    --spotlight-x: 50%;
+    --spotlight-y: 50%;
+    --spotlight-opacity: 0;
+    --spotlight-size: 280px;
+}
+
+[data-spotlight]::before,
+[data-spotlight]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--spotlight-opacity);
+    transition: opacity 180ms ease;
+}
+
+[data-spotlight]::before {
+    z-index: -1;
+    background: radial-gradient(
+        circle var(--spotlight-size) at var(--spotlight-x) var(--spotlight-y),
+        rgb(117 220 255 / .14),
+        rgb(135 170 255 / .055) 42%,
+        transparent 72%
+    );
+    filter: drop-shadow(0 0 18px rgb(117 220 255 / .35));
+}
+
+[data-spotlight]::after {
+    z-index: 1;
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(
+        circle 190px at calc(var(--spotlight-x) + 1px) calc(var(--spotlight-y) + 1px),
+        rgb(220 247 255 / .95),
+        rgb(117 220 255 / .65) 28%,
+        rgb(135 170 255 / .13) 65%,
+        transparent 88%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+[data-spotlight][data-spotlight-active],
+[data-spotlight]:focus-visible,
+[data-spotlight]:focus-within {
+    --spotlight-opacity: 1;
+}
+
+[data-spotlight]:not([data-spotlight-active]):focus-within {
+    --spotlight-x: 50%;
+    --spotlight-y: 50%;
+}
+
+html.companion-motion-paused [data-spotlight]::before,
+html.companion-motion-paused [data-spotlight]::after {
+    transition: none;
+}
+
+@supports not ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+    [data-spotlight]::after {
+        padding: 0;
+        background: none;
+        border: 1px solid rgb(117 220 255 / .6);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-spotlight]::before,
+    [data-spotlight]::after {
+        transition: none;
+    }
+    [data-spotlight]:hover,
+    [data-spotlight]:focus-visible,
+    [data-spotlight]:focus-within {
+        --spotlight-opacity: .65;
+        --spotlight-x: 50%;
+        --spotlight-y: 50%;
+    }
+}
+
+@media (forced-colors: active) {
+    [data-spotlight]::before,
+    [data-spotlight]::after {
+        display: none;
+    }
+    [data-spotlight]:focus-visible,
+    [data-spotlight]:focus-within {
+        outline: 2px solid Highlight;
+        outline-offset: 3px;
+    }
+}

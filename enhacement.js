@@ -93,8 +93,7 @@ document.getElementById("enhShowEmergency")
 
     const steps = [
         "Activate the onboard emergency response " +
-        "and alert the crew medical officer immediately. " +
-        "AstroGuardian has not contacted anyone.",
+        "and alert the crew medical officer immediately.",
 
         "Follow the mission-approved emergency checklist " +
         "and obtain assistance from trained crew members."
@@ -124,8 +123,8 @@ document.getElementById("enhShowEmergency")
             "including CPR and an AED when available " +
             "and indicated.",
 
-            "This demonstration cannot verify breathing " +
-            "or replace hands-on emergency training."
+            "Breathing assessment and emergency care " +
+            "require trained crew and approved procedures."
         );
 
     } else if (
@@ -149,7 +148,7 @@ document.getElementById("enhShowEmergency")
     }
 
     const heading = document.createElement("strong");
-    heading.textContent = "Training response — not a diagnosis";
+    heading.textContent = "Response guidance";
 
     const list = document.createElement("ol");
 
@@ -178,7 +177,7 @@ if (enhSpeakNavigator) {
         if (!text) {
             enhEmergencyResult.textContent =
                 "Select observations and display " +
-                "the training guidance first.";
+                "the response guidance first.";
             return;
         }
 
@@ -202,77 +201,139 @@ if (enhSpeakNavigator) {
 // =======================================
 
 const enhMission = document.getElementById("enhMission");
+const ENH_MISSION_KEY = "astroguardian_mission_v1";
 
 const enhEnvironments = {
-
     station: {
-        title: "International Space Station",
+        title: "Space station",
         description:
-            "Microgravity makes cardiovascular adaptation, " +
-            "muscle and bone changes, and sleep important " +
-            "research topics.",
+            "Keep your station check-ins consistent by noting the onboard " +
+            "schedule and whether you have just rested, exercised, or " +
+            "finished a work period.",
         focus:
-            "Learning focus: health check-ins, exercise " +
-            "and sleep records. Follow the approved " +
-            "crew medical procedures."
+            "Use approved onboard instruments and record measurement " +
+            "conditions. Your mission location does not change clinical thresholds.",
+        context:
+            "Station check-in: use approved onboard instruments and note " +
+            "rest, exercise, and the station schedule alongside your measurements.",
+        reminder:
+            "Your station check-in is due. When your duties allow, record " +
+            "your measurements with approved onboard instruments and note recent activity."
     },
-
-    transit: {
-        title: "Deep-Space Spacecraft",
+    space: {
+        title: "Open space / EVA",
         description:
-            "Distance from Earth can introduce " +
-            "communication delays and increase the " +
-            "need for onboard medical autonomy.",
+            "During an EVA, keep your attention on your crew's approved " +
+            "tasks and suit procedures. A routine manual check-in can wait " +
+            "until you are safely back in a pressurized habitat.",
         focus:
-            "Learning focus: locally available guidance " +
-            "and radiation awareness. Clinical thresholds " +
-            "do not change automatically."
+            "Do not remove your suit or equipment to take a reading. " +
+            "This workspace has no connection to suit telemetry and " +
+            "does not change clinical thresholds.",
+        context:
+            "EVA check-in: record routine measurements only when safely " +
+            "back in a pressurized habitat. Do not remove your suit or " +
+            "equipment to take a reading. Note the EVA and measurement timing.",
+        reminder:
+            "Your check-in is due. Record it when safely back in a " +
+            "pressurized habitat. Do not remove your suit or equipment " +
+            "to take a reading during EVA."
     },
-
     moon: {
-        title: "Lunar Base Camp",
+        title: "Moon base camp",
         description:
-            "The Moon has partial gravity. Lunar dust, " +
-            "surface activities, radiation, and habitat " +
-            "conditions present important challenges.",
+            "Keep habitat and surface-activity context with your lunar " +
+            "check-ins so you can distinguish measurements recorded " +
+            "before and after a surface task.",
         focus:
-            "Learning focus: activity, symptoms and " +
-            "habitat safety. This application cannot " +
-            "measure dust or radiation exposure."
+            "Use approved instruments in the habitat and follow your " +
+            "crew's surface-return procedures. Location selection does " +
+            "not measure dust or radiation exposure or change clinical thresholds.",
+        context:
+            "Moon check-in: record in the habitat with approved instruments. " +
+            "Note recent surface activity and whether the reading was " +
+            "taken before or after it.",
+        reminder:
+            "Your Moon base check-in is due. When safely in the habitat " +
+            "and your duties allow, record your measurements and note " +
+            "recent surface activity."
     }
 };
 
-const savedMission = enhRead("astroguardian_mission_v1");
+function enhNormalizeMission(value) {
+    if (value === "transit") return "space";
+    return typeof value === "string" && Object.hasOwn(enhEnvironments, value)
+        ? value : "station";
+}
 
-if (
-    typeof savedMission === "string" &&
-    Object.hasOwn(enhEnvironments, savedMission)
-) {
-    enhMission.value = savedMission;
+const savedMission = enhRead(ENH_MISSION_KEY);
+let enhMissionLocation = enhNormalizeMission(savedMission);
+if (savedMission === "transit") enhSave(ENH_MISSION_KEY, "space");
+
+const enhMissionSelectors = [...new Set([
+    enhMission,
+    ...document.querySelectorAll("select[data-mission-select]")
+].filter(Boolean))];
+
+function enhSetText(element, text) {
+    if (element && element.textContent !== text) element.textContent = text;
+}
+
+function enhMissionMessage(message) {
+    const outputs = new Set([
+        document.getElementById("missionLocationStatus"),
+        ...document.querySelectorAll("[data-mission-status]")
+    ]);
+    outputs.forEach(output => enhSetText(output, message));
 }
 
 function enhRenderMission() {
-
-    const info = enhEnvironments[enhMission.value];
-
-    document.getElementById("enhMissionTitle").textContent =
-        info.title;
-
-    document.getElementById("enhMissionInfo").textContent =
-        info.description;
-
-    document.getElementById("enhMissionFocus").textContent =
-        info.focus;
+    const info = enhEnvironments[enhMissionLocation];
+    enhMissionSelectors.forEach(selector => { selector.value = enhMissionLocation; });
+    enhSetText(document.getElementById("enhMissionTitle"), info.title);
+    enhSetText(document.getElementById("enhMissionInfo"), info.description);
+    enhSetText(document.getElementById("enhMissionFocus"), info.focus);
+    document.querySelectorAll("[data-mission-name]").forEach(output => enhSetText(output, info.title));
+    document.querySelectorAll("[data-mission-context]").forEach(output => enhSetText(output, info.context));
+    enhRenderGuide();
 }
 
-enhMission.addEventListener("change", () => {
+function enhAnnounceMission() {
+    window.dispatchEvent(new CustomEvent("astroguardian:mission-changed", {
+        detail: { location: enhMissionLocation, title: enhEnvironments[enhMissionLocation].title }
+    }));
+}
 
-    enhSave("astroguardian_mission_v1", enhMission.value);
-
+function enhSetMission(location) {
+    if (!Object.hasOwn(enhEnvironments, location)) {
+        enhRenderMission();
+        return false;
+    }
+    if (location === enhMissionLocation) {
+        enhRenderMission();
+        return true;
+    }
+    if (!enhSave(ENH_MISSION_KEY, location)) {
+        enhRenderMission();
+        enhMissionMessage("Could not save your mission location. Your previous setting is unchanged.");
+        return false;
+    }
+    enhMissionLocation = location;
     enhRenderMission();
+    enhMissionMessage("Mission location set to " + enhEnvironments[location].title + ".");
+    enhAnnounceMission();
+    return true;
+}
+
+enhMissionSelectors.forEach(selector => {
+    selector.addEventListener("change", () => enhSetMission(selector.value));
 });
 
-enhRenderMission();
+window.AstroMission = {
+    getLocation: () => enhMissionLocation,
+    getEnvironment: () => ({ location: enhMissionLocation, ...enhEnvironments[enhMissionLocation] }),
+    setLocation: enhSetMission
+};
 
 
 // =======================================
@@ -388,7 +449,7 @@ function enhRenderGuide() {
         guide.why;
 
     document.getElementById("enhHow").textContent =
-        guide.how;
+        guide.how + " " + enhEnvironments[enhMissionLocation].context;
 
     document.getElementById("enhNext").textContent =
         guide.next;
@@ -401,14 +462,7 @@ enhMetric.addEventListener("change", enhRenderGuide);
 document.getElementById("enhGoToForm")
     .addEventListener("click", () => {
 
-    document.getElementById("healthForm").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
-    document.getElementById(enhMetric.value).focus({
-        preventScroll: true
-    });
+    openAstroPage("check-in", enhMetric.value);
 });
 
 
@@ -496,185 +550,201 @@ function enhRenderInterpretation() {
 // 7. DAILY MEASUREMENT REMINDERS
 // =======================================
 
-const ENH_REMINDER_KEY =
-    "astroguardian_reminder_v1";
+const ENH_REMINDER_KEY = "astroguardian_reminder_v1";
+const ENH_TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+const ENH_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-const savedReminder = enhRead(ENH_REMINDER_KEY);
-
-let enhReminderState = {
-
-    time:
-        savedReminder &&
-        /^([01]\d|2[0-3]):[0-5]\d$/.test(
-            savedReminder.time
-        )
-        ? savedReminder.time
-        : "09:00",
-
-    dismissedDate:
-        savedReminder &&
-        typeof savedReminder.dismissedDate === "string"
-        ? savedReminder.dismissedDate
-        : ""
-};
-
-const enhReminderTime = document.getElementById(
-    "enhReminderTime"
-);
-
-const enhReminderBanner = document.getElementById(
-    "enhReminderBanner"
-);
-
-const enhReminderStatus = document.getElementById(
-    "enhReminderStatus"
-);
-
-enhReminderTime.value = enhReminderState.time;
-
-
-// 8. CHECK IF A REMINDER IS DUE
-
-function enhRenderReminder() {
-
-    const today = enhToday();
-
-    const savedToday = enhSortedRecords().some(
-        record => record.date === today
-    );
-
-    const now = new Date();
-
-    const currentMinutes =
-        now.getHours() * 60 + now.getMinutes();
-
-    const parts = enhReminderState.time
-        .split(":")
-        .map(Number);
-
-    const reminderMinutes =
-        parts[0] * 60 + parts[1];
-
-    if (savedToday) {
-
-        enhReminderBanner.hidden = true;
-
-        enhReminderStatus.textContent =
-            "Today's check-in is complete.";
-
-    } else if (
-        enhReminderState.dismissedDate === today
-    ) {
-
-        enhReminderBanner.hidden = true;
-
-        enhReminderStatus.textContent =
-            "Reminder dismissed for today.";
-
-    } else if (
-        currentMinutes >= reminderMinutes
-    ) {
-
-        enhReminderBanner.hidden = false;
-
-        enhReminderStatus.textContent =
-            "Reminder due since " +
-            enhReminderState.time + ".";
-
-    } else {
-
-        enhReminderBanner.hidden = true;
-
-        enhReminderStatus.textContent =
-            "Next reminder: " + enhReminderState.time;
-    }
+function enhNormalizeReminder(value) {
+    const valid = value && typeof value === "object" && ENH_TIME_PATTERN.test(value.time);
+    return {
+        // A previously saved time was an enabled reminder in the older app.
+        enabled: Boolean(valid && (typeof value.enabled === "boolean" ? value.enabled : true)),
+        time: valid ? value.time : "09:00",
+        dismissedDate: valid && typeof value.dismissedDate === "string" && ENH_DATE_PATTERN.test(value.dismissedDate)
+            ? value.dismissedDate : "",
+        snoozedUntil: valid && Number.isFinite(value.snoozedUntil) && value.snoozedUntil > 0
+            ? value.snoozedUntil : 0
+    };
 }
 
+let enhReminderState = enhNormalizeReminder(enhRead(ENH_REMINDER_KEY));
+const enhReminderTime = document.getElementById("enhReminderTime");
+const enhReminderEnabled = document.getElementById("enhReminderEnabled");
+const enhReminderBanner = document.getElementById("enhReminderBanner");
+const enhReminderMessage = document.getElementById("enhReminderMessage");
+const enhReminderStatus = document.getElementById("enhReminderStatus");
+let enhReminderFeedback = "";
+let enhReminderError = false;
+let enhReminderTimer = null;
 
-// 9. SAVE THE REMINDER TIME
+function enhSyncReminderControls() {
+    if (enhReminderTime) enhReminderTime.value = enhReminderState.time;
+    if (enhReminderEnabled) enhReminderEnabled.checked = enhReminderState.enabled;
+}
 
-document.getElementById("enhSaveReminder")
-    .addEventListener("click", () => {
+function enhClockTime(timestamp) {
+    const date = new Date(timestamp);
+    return String(date.getHours()).padStart(2, "0") + ":" +
+        String(date.getMinutes()).padStart(2, "0");
+}
 
-    if (!enhReminderTime.value) {
+function enhReminderDueTime(now) {
+    const [hours, minutes] = enhReminderState.time.split(":").map(Number);
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0).getTime();
+}
 
-        enhReminderStatus.textContent =
-            "Select a valid reminder time.";
+function enhScheduleReminderCheck(now, dueAt) {
+    clearTimeout(enhReminderTimer);
+    enhReminderTimer = null;
+    if (document.hidden) return;
+    const untilDue = dueAt - now.getTime();
+    const untilSnooze = enhReminderState.snoozedUntil - now.getTime();
+    const delays = [60000];
+    if (enhReminderState.enabled && untilDue > 0) delays.push(untilDue);
+    if (enhReminderState.enabled && untilSnooze > 0) delays.push(untilSnooze);
+    enhReminderTimer = setTimeout(() => {
+        enhReminderTimer = null;
+        if (!document.hidden) enhRenderReminder();
+    }, Math.max(1000, Math.min(...delays)));
+}
 
-        return;
+function enhRenderReminder() {
+    const now = new Date();
+    const today = enhToday();
+    const dueAt = enhReminderDueTime(now);
+    const recorded = enhSortedRecords().some(record => record.date === today);
+    const snoozed = enhReminderState.snoozedUntil > now.getTime();
+    let summary;
+    let compact;
+    let visible = false;
+
+    if (!enhReminderState.enabled) {
+        summary = "Check-in reminders are off. In-app reminders work while this workspace is open.";
+        compact = "Off";
+    } else if (recorded) {
+        summary = "Today's check-in is complete. Next reminder tomorrow at " + enhReminderState.time + ".";
+        compact = "Done today";
+    } else if (enhReminderState.dismissedDate === today) {
+        summary = "Reminder dismissed for today. Next reminder tomorrow at " + enhReminderState.time + ".";
+        compact = "Dismissed today";
+    } else if (now.getTime() >= dueAt && snoozed) {
+        summary = "Reminder snoozed until " + enhClockTime(enhReminderState.snoozedUntil) + ".";
+        compact = "Snoozed until " + enhClockTime(enhReminderState.snoozedUntil);
+    } else if (now.getTime() >= dueAt) {
+        visible = true;
+        summary = "Check-in due since " + enhReminderState.time + " · " + enhEnvironments[enhMissionLocation].title + ".";
+        compact = "Due: " + enhReminderState.time;
+    } else {
+        summary = "Next check-in reminder today at " + enhReminderState.time + ". In-app while your workspace is open.";
+        compact = "Next: " + enhReminderState.time;
     }
 
-    enhReminderState.time = enhReminderTime.value;
-    enhReminderState.dismissedDate = "";
+    if (enhReminderBanner) enhReminderBanner.hidden = !visible;
+    enhSetText(enhReminderMessage, enhEnvironments[enhMissionLocation].reminder +
+        (enhReminderError ? " " + enhReminderFeedback : ""));
+    enhSetText(enhReminderStatus, enhReminderFeedback ? enhReminderFeedback + " " + summary : summary);
+    document.querySelectorAll("[data-reminder-summary]").forEach(output =>
+        enhSetText(output, compact));
+    enhScheduleReminderCheck(now, dueAt);
+}
 
-    if (!enhSave(ENH_REMINDER_KEY, enhReminderState)) {
-
-        enhReminderStatus.textContent =
-            "Could not save reminder preference.";
-
-        return;
+function enhCommitReminder(next, confirmation) {
+    // Apply state only after durable storage accepts the entire preference.
+    if (!enhSave(ENH_REMINDER_KEY, next)) {
+        enhSyncReminderControls();
+        enhReminderFeedback = "Could not save reminder settings. Your previous setting is unchanged.";
+        enhReminderError = true;
+        enhRenderReminder();
+        return false;
     }
+    enhReminderState = next;
+    enhReminderFeedback = confirmation;
+    enhReminderError = false;
+    enhSyncReminderControls();
+    enhRenderReminder();
+    window.dispatchEvent(new CustomEvent("astroguardian:reminder-changed", {
+        detail: { enabled: next.enabled, time: next.time }
+    }));
+    return true;
+}
 
+function enhSaveReminderSettings(allowDisableWithoutTime = false) {
+    const enabled = Boolean(enhReminderEnabled?.checked);
+    const proposedTime = enhReminderTime?.value || "";
+    if ((!allowDisableWithoutTime || enabled) && !ENH_TIME_PATTERN.test(proposedTime)) {
+        if (enhReminderEnabled) enhReminderEnabled.checked = enhReminderState.enabled;
+        enhReminderFeedback = "Choose a valid reminder time from 00:00 to 23:59.";
+        enhReminderError = true;
+        enhRenderReminder();
+        return false;
+    }
+    return enhCommitReminder({
+        enabled,
+        time: ENH_TIME_PATTERN.test(proposedTime) ? proposedTime : enhReminderState.time,
+        dismissedDate: "",
+        snoozedUntil: 0
+    }, enabled ? "Reminder saved for " + proposedTime + "." : "Check-in reminders turned off.");
+}
+
+document.getElementById("enhSaveReminder")?.addEventListener("click", () => enhSaveReminderSettings());
+enhReminderEnabled?.addEventListener("change", () => enhSaveReminderSettings(true));
+
+document.getElementById("enhDismissReminder")?.addEventListener("click", () => {
+    if (!enhReminderState.enabled) return;
+    enhCommitReminder({ ...enhReminderState, dismissedDate: enhToday(), snoozedUntil: 0 },
+        "Reminder dismissed for today.");
+});
+
+document.getElementById("enhSnoozeReminder")?.addEventListener("click", () => {
+    if (!enhReminderState.enabled) return;
+    enhCommitReminder({ ...enhReminderState, dismissedDate: "", snoozedUntil: Date.now() + 10 * 60 * 1000 },
+        "Reminder snoozed for 10 minutes.");
+});
+
+document.getElementById("enhOpenCheckIn")?.addEventListener("click", () => {
+    openAstroPage("check-in", "recordDate");
+});
+
+window.addEventListener("astroguardian:records-updated", () => {
+    enhRenderInterpretation();
     enhRenderReminder();
 });
-
-
-// 10. DISMISS THE REMINDER
-
-document.getElementById("enhDismissReminder")
-    .addEventListener("click", () => {
-
-    enhReminderState.dismissedDate = enhToday();
-
-    enhSave(ENH_REMINDER_KEY, enhReminderState);
-
-    enhRenderReminder();
-});
-
-
-// 11. OPEN THE HEALTH FORM
-
-document.getElementById("enhOpenCheckIn")
-    .addEventListener("click", () => {
-
-    document.getElementById("healthForm").scrollIntoView({
-        behavior: "smooth"
-    });
-
-    document.getElementById("recordDate").focus({
-        preventScroll: true
-    });
-});
-
-
-// 12. UPDATE AFTER HEALTH RECORD CHANGES
-
-window.addEventListener(
-    "astroguardian:records-updated",
-    () => {
-
-        enhRenderInterpretation();
-        enhRenderReminder();
-    }
-);
-
-
-// 13. UPDATE REMINDERS WHEN THE TAB IS ACTIVE
-
-document.addEventListener("visibilitychange", () => {
-
-    if (!document.hidden) {
-        enhRenderReminder();
-    }
-});
-
+window.addEventListener("astroguardian:mission-changed", enhRenderReminder);
+window.addEventListener("astroguardian:page-changed", enhRenderReminder);
 window.addEventListener("focus", enhRenderReminder);
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        clearTimeout(enhReminderTimer);
+        enhReminderTimer = null;
+    } else enhRenderReminder();
+});
+window.addEventListener("pagehide", () => {
+    clearTimeout(enhReminderTimer);
+    enhReminderTimer = null;
+});
+window.addEventListener("pageshow", enhRenderReminder);
 
-// Check once per minute while the page is running
-setInterval(enhRenderReminder, 60000);
+window.addEventListener("storage", event => {
+    if (event.key === ENH_MISSION_KEY || event.key === null) {
+        const location = enhNormalizeMission(enhRead(ENH_MISSION_KEY));
+        if (location !== enhMissionLocation) {
+            enhMissionLocation = location;
+            enhRenderMission();
+            enhMissionMessage("Mission location updated from another open workspace.");
+            enhAnnounceMission();
+        }
+    }
+    if (event.key === ENH_REMINDER_KEY || event.key === null) {
+        enhReminderState = enhNormalizeReminder(enhRead(ENH_REMINDER_KEY));
+        enhReminderFeedback = "";
+        enhReminderError = false;
+        enhSyncReminderControls();
+        enhRenderReminder();
+    }
+});
 
-
-// 14. INITIALIZE ENHANCEMENTS
-
-enhRenderGuide();
+// Initialize after all guides, controls, and event handlers are ready.
+enhSyncReminderControls();
+enhRenderMission();
 enhRenderReminder();
+enhAnnounceMission();

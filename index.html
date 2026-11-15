@@ -1,470 +1,241 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-type="software" data-radius="soft">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>AstroGuardian | Astronaut Health</title>
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Your astronaut wellness workspace. Record check-ins, explore trends, and spend a moment with ASTRA, your onboard companion.">
+  <meta name="page-type" content="software"><meta name="site-kind" content="software">
+  <meta name="theme-color" content="#0b111c">
+  <meta property="og:title" content="AstroGuardian | Your onboard wellness companion">
+  <meta property="og:description" content="Daily check-ins, spaceflight health exploration, and a friendly conversation with ASTRA. Your space for well-being beyond Earth.">
+  <meta property="og:type" content="website">
+  <title>Mission overview | AstroGuardian</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="app-shell.css"><link rel="stylesheet" href="body-viewer.css"><link rel="stylesheet" href="companion.css"><link rel="stylesheet" href="components/ui/spotlight-card.css"><link rel="stylesheet" href="components/ui/liquid-metal-button.css">
 </head>
-
 <body>
-    <main class="container">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="skip-link" href="#mainContent">Skip to content</a>
+      <a href="#/overview" class="brand" aria-label="AstroGuardian overview"><span class="brand-mark" aria-hidden="true">a<span>✦</span></span><span>astro<span class="brand-light">guardian</span><small>YOUR ONBOARD COMPANION</small></span></a>
+      <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-expanded="false" aria-controls="mainNavigation">Menu <span aria-hidden="true">☰</span></button>
+      <nav id="mainNavigation" class="main-navigation" aria-label="Main navigation">
+        <a href="#/overview" class="nav-direct">Overview</a>
+        <div class="nav-group" data-group="health">
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="healthMenu">Health <span class="chevron" aria-hidden="true"></span></button>
+          <div class="nav-dropdown" id="healthMenu" hidden><div class="menu-intro"><span class="eyebrow">PERSONAL HEALTH LOG</span><strong>Your daily<br>perspective.</strong><p>A record at a time.<br>A clearer picture over time.</p><a href="#/check-in" class="text-link">Record a check-in</a></div><div class="menu-links">
+            <a href="#/check-in" class="menu-link"><span class="menu-icon" aria-hidden="true">＋</span><span><strong>Daily check-in</strong><small>Record today’s measurements</small></span></a>
+            <a href="#/trends" class="menu-link"><span class="menu-icon" aria-hidden="true">▥</span><span><strong>Trends & insights</strong><small>Explore your recorded changes</small></span></a>
+            <a href="#/body" class="menu-link"><span class="menu-icon" aria-hidden="true">◎</span><span><strong>Body explorer</strong><small>Turn, select, and learn</small></span></a>
+            <a href="#/history" class="menu-link"><span class="menu-icon" aria-hidden="true">▤</span><span><strong>Health history</strong><small>Revisit your saved check-ins</small></span></a>
+          </div></div>
+        </div>
+        <div class="nav-group" data-group="mission">
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="missionMenu">Mission <span class="chevron" aria-hidden="true"></span></button>
+          <div class="nav-dropdown mission-dropdown" id="missionMenu" hidden><div class="menu-links">
+            <a href="#/wellness" class="menu-link"><span class="menu-icon" aria-hidden="true">✧</span><span><strong>Wellness missions</strong><small>Small steps for your day</small></span></a>
+            <a href="#/mission" class="menu-link"><span class="menu-icon" aria-hidden="true">⌘</span><span><strong>Mission tools</strong><small>Measurement guides & reminders</small></span></a>
+            <a href="#/offline" class="menu-link"><span class="menu-icon" aria-hidden="true">◉</span><span><strong>Offline support</strong><small>Check application availability</small></span></a>
+            <a href="#/emergency" class="menu-link"><span class="menu-icon" aria-hidden="true">＋</span><span><strong>Emergency support</strong><small>Open incident guidance</small></span></a>
+          </div></div>
+        </div>
+        <a href="#/assistant" class="nav-direct">Meet ASTRA <span class="nav-new">COMPANION</span></a>
+      </nav>
+      <div class="header-actions"><span class="local-indicator"><i></i> Local workspace</span><a href="#/emergency" class="emergency-link">Emergency</a></div>
+    </div>
+  </header>
+  <main id="mainContent" class="app-container" tabindex="-1">
+    <div class="workspace-bar"><span><i class="status-dot"></i> CREW WELLNESS WORKSPACE</span><span id="missionDate"></span></div>
+    <section class="mission-context-bar" aria-label="Mission location and measurement reminders">
+      <div class="mission-location-field">
+        <label for="missionLocation">Current location</label>
+        <select id="missionLocation" data-mission-select>
+          <option value="station">Space station</option>
+          <option value="space">Open space (EVA)</option>
+          <option value="moon">Moon base camp</option>
+        </select>
+      </div>
+      <div class="mission-reminder-shortcut">
+        <div><span class="tiny-label">MEASUREMENT REMINDERS</span><strong data-reminder-summary>Reminders off</strong></div>
+        <a class="button button-secondary" href="#/mission" data-reminder-settings>Set reminder</a>
+      </div>
+      <p id="missionLocationStatus" data-mission-status class="mission-setting-status" role="status" aria-live="polite"></p>
+    </section>
+    <div id="enhReminderBanner" class="measurement-reminder-banner" role="region" aria-label="Measurement reminder" hidden>
+      <div><span class="tiny-label">TIME FOR YOUR MEASUREMENTS</span><strong data-mission-name>Space station</strong><p id="enhReminderMessage" role="status" aria-live="polite"></p></div>
+      <div class="measurement-reminder-actions"><button type="button" id="enhOpenCheckIn" class="button button-primary" data-liquid-metal>Record measurements</button><button type="button" id="enhSnoozeReminder" class="button button-secondary">Remind in 10 min</button><button type="button" id="enhDismissReminder" class="button button-secondary">Dismiss today</button></div>
+    </div>
+    <div id="routeAnnouncement" class="sr-only" role="status" aria-live="polite"></div>
+    <section class="route-page overview-page" data-page="overview" aria-labelledby="title-overview">
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / OVERVIEW</p><h1 id="title-overview" tabindex="-1">Welcome aboard, Commander.</h1><p>A moment for yourself. A little company along the way.</p></div><span class="page-index">01 / 10</span></div>
 
-        <!-- SCREEN 1: WELCOME -->
-        <section id="welcome" class="panel welcome">
+      <div class="overview-grid">
+        <div class="mission-welcome" data-enter>
+          <div class="mission-welcome-top"><span class="tiny-label">YOUR DAILY ORBIT</span><span class="orbit-symbol" aria-hidden="true">✦</span></div>
+          <h2>Your mission.<br><span>Your well-being.</span></h2>
+          <p>Keep track of your day, understand your patterns, and make room for a conversation beyond the checklist.</p>
+          <div class="hero-actions"><a class="button button-primary" href="#/check-in" data-liquid-metal>Record a check-in</a><a class="button button-secondary" href="#/trends">Explore trends</a></div>
+          <div class="welcome-foot"><span><i class="status-dot"></i> Your records stay in this browser</span><span>ONE DAY AT A TIME</span></div>
+        </div>
+        <aside class="flight-plan" data-spotlight><div class="section-heading"><p class="tiny-label">A LITTLE PLAN FOR TODAY</p><span class="small-orbit" aria-hidden="true">◎</span></div>
+          <a href="#/check-in" class="plan-step"><span class="step-number">01</span><span><strong>Check in with yourself</strong><small>Log your daily measurements</small></span></a>
+          <a href="#/body" class="plan-step"><span class="step-number">02</span><span><strong>Get a new perspective</strong><small>Explore your body in space</small></span></a>
+          <button type="button" class="plan-step" data-open-assistant><span class="step-number">03</span><span><strong>Take a company break</strong><small>Say hello to ASTRA</small></span></button>
+          <p class="flight-note">No rush, Commander.<br>This is your space, too.</p>
+        </aside>
+      </div>
+      <div class="overview-stats" aria-label="Your saved record summary"><div><span class="tiny-label">SAVED CHECK-INS</span><strong id="overviewRecordCount">0</strong><small id="overviewLatest">Your first check-in starts here</small></div><div><span class="tiny-label">LATEST HEART RATE</span><strong><span data-overview-metric="heartRate">—</span><small>bpm</small></strong><small>From your most recent record</small></div><div><span class="tiny-label">LATEST SLEEP</span><strong><span data-overview-metric="sleepHours">—</span><small>hours</small></strong><small>From your most recent record</small></div><div><span class="tiny-label">YOUR COMPANION</span><strong class="companion-word">ASTRA <span>✦</span></strong><button class="text-link" data-open-assistant type="button">Here when you need company</button></div></div>
+      <div class="explore-heading"><h2>Find your space</h2><span>TOOLS FOR LIFE BEYOND EARTH</span></div>
+      <div class="destination-grid"><a href="#/body" class="destination" data-spotlight><span class="destination-icon" aria-hidden="true">◎</span><h3>Body explorer</h3><p>Turn the silhouette and explore spaceflight health topics.</p></a><a href="#/wellness" class="destination" data-spotlight><span class="destination-icon" aria-hidden="true">✧</span><h3>Wellness missions</h3><p>A few small activities to bring structure to your day.</p></a><a href="#/mission" class="destination" data-spotlight><span class="destination-icon" aria-hidden="true">⌘</span><h3>Mission tools</h3><p>Measurement guides, mission context, and a daily reminder.</p></a></div>
 
-            <p class="eyebrow">
-                SPACE HEALTH MONITORING SYSTEM
-            </p>
+</section>
+    <section class="route-page " data-page="check-in" aria-labelledby="title-check-in" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / CHECK IN</p><h1 id="title-check-in" tabindex="-1">Your daily check-in.</h1><p>Take a moment to record your measurements and reflect on your day.</p></div><span class="page-index">02 / 10</span></div>
+  <section class="panel">
 
-            <h1>ASTROGUARDIAN</h1>
+                <h2>Daily Health Measurements</h2>
 
-            <h2>Your Health Companion Beyond Earth</h2>
+                <div class="check-in-location-context"><span class="tiny-label">CURRENT LOCATION</span><strong data-mission-name>Space station</strong><p data-mission-context></p></div>
 
-            <p>
-                Record daily health indicators,
-                monitor your well-being and explore
-                your health history during space missions.
-            </p>
-
-            <button id="startButton" type="button">
-                Start Health Monitoring
-            </button>
-
-        </section>
-
-        <!-- SCREEN 2: DAILY HEALTH CHECK -->
-        <section id="appSection" class="hidden">
-
-            <header class="app-header">
-                <p class="eyebrow">ASTROGUARDIAN</p>
-                <h1>Astronaut Health Check-In</h1>
-                <p>
-                    Record your daily health information.
+                <p class="muted">
+                    Enter your measurements below.
+                    All fields except notes are required.
                 </p>
-            </header>
 
-            
-<!-- =====================================
-     STAGE 7: EMERGENCY SUPPORT
-     ===================================== -->
+                <form id="healthForm">
 
-<div class="emergency-toolbar">
+                    <div class="form-grid">
 
-    <button
-        type="button"
-        id="emergencyOpen"
-        class="emergency-main-button"
-    >
-        🚨 Open Emergency Support
-    </button>
+                        <div class="field">
+                            <label for="recordDate">
+                                Measurement Date
+                            </label>
+                            <input
+                                type="date"
+                                id="recordDate"
+                                required
+                            >
+                        </div>
 
-    <p>
-        Training simulation only.
-        No actual emergency alerts are sent.
-    </p>
+                        <div class="field">
+                            <label for="heartRate">
+                                Heart Rate (bpm)
+                            </label>
+                            <input
+                                type="number"
+                                id="heartRate"
+                                min="1"
+                                max="300"
+                                step="1"
+                                placeholder="e.g. 76"
+                                required
+                            >
+                        </div>
 
-</div>
+                        <div class="field">
+                            <label for="temperature">
+                                Body Temperature (°C)
+                            </label>
+                            <input
+                                type="number"
+                                id="temperature"
+                                min="20"
+                                max="50"
+                                step="0.1"
+                                placeholder="e.g. 36.7"
+                                required
+                            >
+                        </div>
 
-<section
-    id="emergencyPanel"
-    class="panel emergency-panel"
-    hidden
->
+                        <div class="field">
+                            <label for="sleepHours">
+                                Sleep Duration (hours)
+                            </label>
+                            <input
+                                type="number"
+                                id="sleepHours"
+                                min="0"
+                                max="24"
+                                step="0.1"
+                                placeholder="e.g. 7.5"
+                                required
+                            >
+                        </div>
 
-    <p class="eyebrow">
-        ASTROGUARDIAN / EMERGENCY SUPPORT
-    </p>
+                        <div class="field">
+                            <label for="exerciseMinutes">
+                                Exercise Duration (minutes)
+                            </label>
+                            <input
+                                type="number"
+                                id="exerciseMinutes"
+                                min="0"
+                                max="1440"
+                                step="1"
+                                placeholder="e.g. 40"
+                                required
+                            >
+                        </div>
 
-    <h2>Emergency Assistance</h2>
+                        <div class="field">
+                            <label for="mood">
+                                Mood / Well-being
+                            </label>
+                            <select id="mood" required>
+                                <option value="">
+                                    Select your mood
+                                </option>
+                                <option value="1">
+                                    1 - Very low
+                                </option>
+                                <option value="2">
+                                    2 - Low
+                                </option>
+                                <option value="3">
+                                    3 - Neutral
+                                </option>
+                                <option value="4">
+                                    4 - Good
+                                </option>
+                                <option value="5">
+                                    5 - Very good
+                                </option>
+                            </select>
+                        </div>
 
-    <p class="emergency-warning">
-        SIMULATION ONLY — This application cannot
-        dispatch help, diagnose conditions or
-        contact mission control.
-    </p>
+                    </div>
 
-    <p>
-        Select a simulated mission incident to
-        display basic escalation guidance.
-        Real missions require approved onboard
-        procedures and trained medical personnel.
-    </p>
+                    <div class="field notes-field">
+                        <label for="notes">
+                            Additional Notes (optional)
+                        </label>
 
-    <div class="field">
+                        <textarea
+                            id="notes"
+                            rows="3"
+                            maxlength="200"
+                            placeholder="Any observations today?"
+                        ></textarea>
+                    </div>
 
-        <label for="emergencyScenario">
-            Select Incident Type
-        </label>
+                    <button type="submit" class="primary-button" data-liquid-metal>
+                        Save Health Record
+                    </button>
 
-        <select id="emergencyScenario">
+                    <p
+                        id="statusMessage"
+                        class="status"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
 
-            <option value="medical">
-                Astronaut Medical Emergency
-            </option>
+                </form>
 
-            <option value="radiation">
-                Radiation Warning
-            </option>
-
-            <option value="communications">
-                Medical Communications Unavailable
-            </option>
-
-        </select>
-
-    </div>
-
-    <div class="emergency-actions">
-
-        <button
-            type="button"
-            id="emergencyChecklistButton"
-        >
-            Show Training Checklist
-        </button>
-
-        <button
-            type="button"
-            id="emergencySpeakButton"
-        >
-            🔊 Read Guidance
-        </button>
-
-        <button
-            type="button"
-            id="emergencyClose"
-        >
-            Close
-        </button>
-
-    </div>
-
-    <div class="emergency-checklist">
-
-        <h3 id="emergencyTitle">
-            Medical Emergency
-        </h3>
-
-        <ol id="emergencySteps"></ol>
-
-    </div>
-    
-    
-<!-- ENHANCEMENT: COLLAPSE EMERGENCY TRAINER -->
-
-<div class="enh-trainer" id="collapseTrainer">
-
-    <p class="eyebrow">INTERACTIVE EMERGENCY TRAINING</p>
-
-    <h3>Chest Pain & Collapse Navigator</h3>
-
-    <p>
-        Scenario: A crewmate reports chest pain
-        and suddenly collapses.
-    </p>
-
-    <p class="enh-urgent">
-        Potentially life-threatening emergency:
-        Activate the onboard emergency response
-        and alert the crew medical officer immediately.
-        Do not wait for this simulation.
-    </p>
-
-    <p>
-        ASTRA cannot determine the cause of a
-        collapse. Select observations to explore
-        an example response pathway.
-    </p>
-
-    <div class="field">
-        <label for="enhResponsive">
-            Is the astronaut responsive?
-        </label>
-
-        <select id="enhResponsive">
-            <option value="">Select an answer</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-            <option value="unsure">I'm not sure</option>
-        </select>
-    </div>
-
-    <div
-        class="field enh-breathing"
-        id="enhBreathingGroup"
-        hidden
-    >
-        <label for="enhBreathing">
-            Is the astronaut breathing normally?
-        </label>
-
-        <select id="enhBreathing">
-            <option value="">Select an answer</option>
-            <option value="yes">Yes</option>
-            <option value="no">No or only gasping</option>
-            <option value="unsure">I'm not sure</option>
-        </select>
-    </div>
-
-    <button type="button" id="enhShowEmergency">
-        Show Next Training Guidance
-    </button>
-
-    <div
-        id="enhEmergencyResult"
-        class="enh-result"
-        role="status"
-        aria-live="polite"
-    ></div>
-
-    <p class="enh-small">
-        Educational simulation only. Not an approved
-        NASA emergency protocol. Real crew actions
-        require mission-specific training, equipment
-        and approved procedures.
-    </p>
-
-</div>
-
-
-    <p
-        id="emergencyStatus"
-        role="status"
-        aria-live="polite"
-    ></p>
-
-    <p class="emergency-note">
-        This is a demonstration of checklist access,
-        not an operational spacecraft medical protocol.
-        All medical actions must follow approved
-        mission procedures.
-    </p>
-
+            </section>
 </section>
-
-
-<!-- =====================================
-     ASTROGUARDIAN ENHANCEMENT FEATURES
-     ===================================== -->
-
-<section class="panel enh-panel" id="missionTools">
-
-    <p class="eyebrow">
-        ASTROGUARDIAN / MISSION ASSISTANCE
-    </p>
-
-    <h2>Mission Health Assistant</h2>
-
-    <p class="muted">
-        Configure your mission environment,
-        learn how to collect measurements,
-        understand recorded changes and
-        schedule daily check-ins.
-    </p>
-
-    <!-- 1. MISSION ENVIRONMENT -->
-
-    <div class="enh-section">
-
-        <h3>1. Mission Environment</h3>
-
-        <label for="enhMission">
-            Current Mission Location
-        </label>
-
-        <select id="enhMission">
-
-            <option value="station">
-                International Space Station
-            </option>
-
-            <option value="transit">
-                Deep-Space Spacecraft
-            </option>
-
-            <option value="moon">
-                Lunar Base Camp
-            </option>
-
-        </select>
-
-        <div class="enh-info">
-            <h4 id="enhMissionTitle"></h4>
-            <p id="enhMissionInfo"></p>
-            <p id="enhMissionFocus"></p>
-        </div>
-
-        <a
-            href="https://www.nasa.gov/hrp/hazards/"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            NASA: Human Spaceflight Hazards
-        </a>
-
-    </div>
-
-    <!-- 2. MEASUREMENT GUIDANCE -->
-
-    <div class="enh-section">
-
-        <h3>2. Guided Health Measurements</h3>
-
-        <p class="muted">
-            Learn why a measurement matters
-            and how to record it correctly.
-        </p>
-
-        <label for="enhMetric">
-            Select Health Indicator
-        </label>
-
-        <select id="enhMetric">
-
-            <option value="heartRate">Heart Rate</option>
-            <option value="temperature">Temperature</option>
-            <option value="sleepHours">Sleep Duration</option>
-            <option value="exerciseMinutes">Exercise</option>
-            <option value="mood">Mood</option>
-
-        </select>
-
-        <div class="enh-info">
-
-            <h4>Why does it matter?</h4>
-            <p id="enhWhy"></p>
-
-            <h4>How should it be measured?</h4>
-            <p id="enhHow"></p>
-
-            <h4>What if the reading is unexpected?</h4>
-            <p id="enhNext"></p>
-
-        </div>
-
-        <button
-            type="button"
-            id="enhGoToForm"
-        >
-            Go to Health Check-In Form
-        </button>
-
-    </div>
-
-    <!-- 3. PERSONALIZED INTERPRETATION -->
-
-    <div class="enh-section">
-
-        <h3>3. Understand Your Recorded Changes</h3>
-
-        <p class="muted">
-            Compare the selected indicator with
-            your previous three check-ins.
-        </p>
-
-        <div
-            id="enhInterpretation"
-            class="enh-info"
-            role="status"
-        >
-            Save health records to compare trends.
-        </div>
-
-        <p class="enh-small">
-            A recorded change does not necessarily
-            mean a medical abnormality. Symptoms
-            and clinical context must be assessed
-            using approved medical guidance.
-        </p>
-
-    </div>
-
-    <!-- 4. DAILY REMINDERS -->
-
-    <div class="enh-section">
-
-        <h3>4. Daily Measurement Reminder</h3>
-
-        <p class="muted">
-            Choose when AstroGuardian should
-            remind you to complete your daily
-            health check-in.
-        </p>
-
-        <label for="enhReminderTime">
-            Reminder Time (device local time)
-        </label>
-
-        <input
-            type="time"
-            id="enhReminderTime"
-            value="09:00"
-        >
-
-        <button
-            type="button"
-            id="enhSaveReminder"
-        >
-            Save Reminder
-        </button>
-
-        <p
-            id="enhReminderStatus"
-            role="status"
-            aria-live="polite"
-        ></p>
-
-        <div
-            id="enhReminderBanner"
-            class="enh-reminder"
-            hidden
-        >
-            <strong>
-                Daily Health Check-In Reminder
-            </strong>
-
-            <p>
-                Your scheduled check-in is due.
-                Open the health form to record
-                your measurements.
-            </p>
-
-            <button
-                type="button"
-                id="enhOpenCheckIn"
-            >
-                Open Health Form
-            </button>
-
-            <button
-                type="button"
-                id="enhDismissReminder"
-            >
-                Dismiss for Today
-            </button>
-
-        </div>
-
-        <p class="enh-small">
-            Reminders work while this application
-            is open or when you return to it.
-            This prototype cannot guarantee alerts
-            while the browser is closed.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- STAGE 3: ASTRONAUT HEALTH DASHBOARD -->
-
-<section class="panel dashboard-panel" id="healthDashboard">
+    <section class="route-page " data-page="trends" aria-labelledby="title-trends" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / TRENDS</p><h1 id="title-trends" tabindex="-1">A view over time.</h1><p>Explore your saved measurements and the patterns between check-ins.</p></div><span class="page-index">03 / 10</span></div>
+  <section class="panel dashboard-panel" id="healthDashboard">
 
     <div class="section-heading">
         <div>
@@ -481,7 +252,7 @@
 
     <div class="summary-grid">
 
-        <article class="summary-card">
+        <article class="summary-card" data-spotlight>
             <span class="metric-icon">❤️</span>
             <p>Heart Rate</p>
             <div class="metric-value">
@@ -490,7 +261,7 @@
             </div>
         </article>
 
-        <article class="summary-card">
+        <article class="summary-card" data-spotlight>
             <span class="metric-icon">🌡️</span>
             <p>Temperature</p>
             <div class="metric-value">
@@ -499,7 +270,7 @@
             </div>
         </article>
 
-        <article class="summary-card">
+        <article class="summary-card" data-spotlight>
             <span class="metric-icon">🌙</span>
             <p>Sleep</p>
             <div class="metric-value">
@@ -508,7 +279,7 @@
             </div>
         </article>
 
-        <article class="summary-card">
+        <article class="summary-card" data-spotlight>
             <span class="metric-icon">🏃</span>
             <p>Exercise</p>
             <div class="metric-value">
@@ -517,7 +288,7 @@
             </div>
         </article>
 
-        <article class="summary-card">
+        <article class="summary-card" data-spotlight>
             <span class="metric-icon">🧠</span>
             <p>Mood</p>
             <div class="metric-value">
@@ -607,12 +378,7 @@
 
     </div>
 
-</section>
-
-
-<!-- STAGE 4: PERSONALIZED HEALTH INSIGHTS -->
-
-<section class="panel insights-panel" id="insightsPanel">
+</section><section class="panel insights-panel" id="insightsPanel">
 
     <p class="eyebrow">
         PERSONALIZED HEALTH MONITORING
@@ -643,22 +409,16 @@
         class="insights-grid"
     ></div>
 
-    <p class="insights-disclaimer">
-        Research prototype only. These comparisons
-        use demonstration rules and cannot diagnose
-        medical conditions or determine astronaut
-        fitness. Follow approved mission medical
-        procedures for health concerns.
-    </p>
+    <details class="insights-disclaimer">
+        <summary>About these comparisons</summary>
+        <p>Comparison markers highlight changes in saved values. They are not clinical thresholds or an assessment of fitness.</p>
+    </details>
 
 </section>
-
-
-<!-- ====================================
-     STAGE 5: INTERACTIVE HUMAN BODY MAP
-     ==================================== -->
-
-<section class="panel bodymap-panel" id="bodyMap">
+</section>
+    <section class="route-page " data-page="body" aria-labelledby="title-body" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / BODY</p><h1 id="title-body" tabindex="-1">A new perspective.</h1><p>Explore the human body and learn about life in space.</p></div><span class="page-index">04 / 10</span></div>
+  <section class="panel bodymap-panel" id="bodyMap">
 
     <p class="eyebrow">HUMAN SPACEFLIGHT HEALTH</p>
 
@@ -834,7 +594,7 @@
                 Your related measurement will appear here.
             </p>
 
-            <h4>Educational Guidance</h4>
+            <h4>Mission Guidance</h4>
             <p id="bodyInfoGuidance">
                 Explore NASA-informed health information.
             </p>
@@ -887,18 +647,513 @@
     </div>
 
 </section>
+</section>
+    <section class="route-page " data-page="history" aria-labelledby="title-history" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / HISTORY</p><h1 id="title-history" tabindex="-1">Your mission, recorded.</h1><p>Your saved check-ins, all in one place on this browser.</p></div><span class="page-index">05 / 10</span></div>
+  <section class="panel history-panel">
 
-            
-<!-- ======================================
-     STAGE 6: ASTRA VOICE ASSISTANT
-     ====================================== -->
+                <div class="section-heading">
+                    <h2>Health History</h2>
+                    <span id="recordCount">
+                        0 records
+                    </span>
+                </div>
 
-<section class="panel astra-panel" id="astraAssistant">
+                <p id="emptyState" class="muted">
+                    No health records saved yet.
+                </p>
 
-    <p class="eyebrow">ASTROGUARDIAN AI INTERFACE</p>
+                <p id="historyStatus" class="status" role="status" aria-live="polite"></p>
+<ul
+                    id="recordsList"
+                    class="records-list"
+                ></ul>
+
+            </section>
+</section>
+    <section class="route-page " data-page="wellness" aria-labelledby="title-wellness" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / WELLNESS</p><h1 id="title-wellness" tabindex="-1">Small steps. Daily rhythm.</h1><p>Make a little room for learning and reflection.</p></div><span class="page-index">06 / 10</span></div>
+  <section class="panel wellness-panel" id="wellnessPanel">
+
+    <p class="eyebrow">
+        MISSION WELLNESS PROGRAM
+    </p>
+
+    <h2>Daily Wellness Missions</h2>
+
+    <p class="muted">
+        Complete your daily activities to
+        earn your daily mission badge.
+    </p>
+
+    <div class="wellness-progress">
+
+        <p id="wellnessProgressText">
+            0 of 3 missions completed
+        </p>
+
+        <div class="wellness-progress-track">
+            <div id="wellnessProgressBar"></div>
+        </div>
+
+    </div>
+
+    <div class="wellness-missions">
+
+        <article class="wellness-task" data-spotlight>
+
+            <h3>1. Daily Health Check-In</h3>
+
+            <p>
+                Record today's health
+                measurements using AstroGuardian.
+            </p>
+
+            <strong id="wellnessRecordStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+        <article class="wellness-task" data-spotlight>
+
+            <h3>2. Review Your Health Trends</h3>
+
+            <p>
+                Review how measurements have
+                changed across previous check-ins.
+            </p>
+
+            <button
+                type="button"
+                id="wellnessReviewTrend"
+            >
+                Review Trends
+            </button>
+
+            <strong id="wellnessTrendStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+        <article class="wellness-task" data-spotlight>
+
+            <h3>3. Explore the Human Body</h3>
+
+            <p>
+                Explore a spaceflight health topic
+                using the interactive body map.
+            </p>
+
+            <button
+                type="button"
+                id="wellnessExploreBody"
+            >
+                Open Body Explorer
+            </button>
+
+            <strong id="wellnessBodyStatus">
+                Not completed
+            </strong>
+
+        </article>
+
+    </div>
+
+    <div class="wellness-badge">
+
+        <h3>🏅 Mission Achievement</h3>
+
+        <p id="wellnessBadge">
+            Complete all three missions to
+            unlock the Mission Health Explorer badge.
+        </p>
+
+    </div>
+
+    <p
+        id="wellnessStatus"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+</section>
+</section>
+    <section class="route-page " data-page="mission" aria-labelledby="title-mission" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / MISSION</p><h1 id="title-mission" tabindex="-1">Tools for your mission.</h1><p>Explore mission environments, measurement guides, and reminders.</p></div><span class="page-index">07 / 10</span></div>
+  <section class="panel enh-panel" id="missionTools">
+
+    <p class="eyebrow">
+        ASTROGUARDIAN / MISSION ASSISTANCE
+    </p>
+
+    <h2>Mission Health Assistant</h2>
+
+    <p class="muted">
+        Configure your mission environment,
+        learn how to collect measurements,
+        understand recorded changes and
+        schedule daily check-ins.
+    </p>
+
+    <!-- 1. MISSION ENVIRONMENT -->
+
+    <div class="enh-section">
+
+        <h3>1. Mission Environment</h3>
+
+        <label for="enhMission">
+            Current Mission Location
+        </label>
+
+        <select id="enhMission">
+
+            <option value="station">
+                Space station
+            </option>
+
+            <option value="space">
+                Open space (EVA)
+            </option>
+
+            <option value="moon">
+                Moon base camp
+            </option>
+
+        </select>
+
+        <div class="enh-info">
+            <h4 id="enhMissionTitle"></h4>
+            <p id="enhMissionInfo"></p>
+            <p id="enhMissionFocus"></p>
+        </div>
+
+        <a
+            href="https://www.nasa.gov/hrp/hazards/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            NASA: Human Spaceflight Hazards
+        </a>
+
+    </div>
+
+    <!-- 2. MEASUREMENT GUIDANCE -->
+
+    <div class="enh-section">
+
+        <h3>2. Guided Health Measurements</h3>
+
+        <p class="muted">
+            Learn why a measurement matters
+            and how to record it correctly.
+        </p>
+
+        <label for="enhMetric">
+            Select Health Indicator
+        </label>
+
+        <select id="enhMetric">
+
+            <option value="heartRate">Heart Rate</option>
+            <option value="temperature">Temperature</option>
+            <option value="sleepHours">Sleep Duration</option>
+            <option value="exerciseMinutes">Exercise</option>
+            <option value="mood">Mood</option>
+
+        </select>
+
+        <div class="enh-info">
+
+            <h4>Why does it matter?</h4>
+            <p id="enhWhy"></p>
+
+            <h4>How should it be measured?</h4>
+            <p id="enhHow"></p>
+
+            <h4>What if the reading is unexpected?</h4>
+            <p id="enhNext"></p>
+
+        </div>
+
+        <button
+            type="button"
+            id="enhGoToForm"
+        >
+            Go to Health Check-In Form
+        </button>
+
+    </div>
+
+    <!-- 3. PERSONALIZED INTERPRETATION -->
+
+    <div class="enh-section">
+
+        <h3>3. Understand Your Recorded Changes</h3>
+
+        <p class="muted">
+            Compare the selected indicator with
+            your previous three check-ins.
+        </p>
+
+        <div
+            id="enhInterpretation"
+            class="enh-info"
+            role="status"
+        >
+            Save health records to compare trends.
+        </div>
+
+        <p class="enh-small">
+            A recorded change does not necessarily
+            mean a medical abnormality. Symptoms
+            and clinical context must be assessed
+            using approved medical guidance.
+        </p>
+
+    </div>
+
+    <!-- 4. DAILY REMINDERS -->
+
+    <div class="enh-section" id="measurementReminderSettings">
+
+        <h3>4. Measurement reminders</h3>
+
+        <p class="muted">
+            Choose when AstroGuardian should
+            remind you to complete your daily
+            health check-in.
+        </p>
+
+        <label class="reminder-enable-option" for="enhReminderEnabled"><input type="checkbox" id="enhReminderEnabled"> Remind me to take measurements</label>
+
+        <label for="enhReminderTime">
+            Reminder Time (device local time)
+        </label>
+
+        <input
+            type="time"
+            id="enhReminderTime"
+            value="09:00"
+        >
+
+        <button
+            type="button"
+            id="enhSaveReminder"
+         data-liquid-metal>
+            Save reminder preferences
+        </button>
+
+        <p
+            id="enhReminderStatus"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <p class="enh-small">
+            Reminders appear while your workspace is open
+            or when you return. Keep the browser open
+            for your scheduled check-in.
+        </p>
+
+    </div>
+
+</section>
+</section>
+    <section class="route-page " data-page="offline" aria-labelledby="title-offline" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / OFFLINE</p><h1 id="title-offline" tabindex="-1">Ready beyond the connection.</h1><p>Check which parts of your workspace are available offline.</p></div><span class="page-index">08 / 10</span></div>
+  <section class="panel offline-panel">
+
+    <h2>Offline Mission Support</h2>
+
+    <p>
+        AstroGuardian can cache its application
+        files so your workspace can be opened again
+        without a network connection.
+    </p>
+
+    <p
+        id="offlineStatus"
+        role="status"
+        aria-live="polite"
+    >
+        Checking offline availability...
+    </p>
+
+    <p class="muted">
+        Voice recognition and external NASA research
+        links may still require internet access.
+    </p>
+
+</section>
+</section>
+    <section class="route-page " data-page="emergency" aria-labelledby="title-emergency" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / EMERGENCY</p><h1 id="title-emergency" tabindex="-1">Emergency support.</h1><p>Access incident guidance and your next steps.</p></div><span class="page-index">09 / 10</span></div>
+  <section
+    id="emergencyPanel"
+    class="panel emergency-panel"
+>
+
+    <p class="eyebrow">
+        ASTROGUARDIAN / EMERGENCY SUPPORT
+    </p>
+
+    <h2>Emergency Assistance</h2>
+
+    <p class="emergency-warning">
+        This workspace cannot contact mission control or send emergency alerts. Follow approved onboard procedures.
+    </p>
+
+    <p>
+        Select a mission incident to view
+        escalation guidance for your crew.
+    </p>
+
+    <div class="field">
+
+        <label for="emergencyScenario">
+            Select Incident Type
+        </label>
+
+        <select id="emergencyScenario">
+
+            <option value="medical">
+                Astronaut Medical Emergency
+            </option>
+
+            <option value="radiation">
+                Radiation Warning
+            </option>
+
+            <option value="communications">
+                Medical Communications Unavailable
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="emergency-actions">
+
+        <button
+            type="button"
+            id="emergencyChecklistButton"
+        >
+            Open Incident Checklist
+        </button>
+
+        <button
+            type="button"
+            id="emergencySpeakButton"
+        >
+            🔊 Read Guidance
+        </button>
+
+        <button
+            type="button"
+            id="emergencyClose"
+        >
+            Close
+        </button>
+
+    </div>
+
+    <div class="emergency-checklist">
+
+        <h3 id="emergencyTitle">
+            Medical Emergency
+        </h3>
+
+        <ol id="emergencySteps"></ol>
+
+    </div>
+
+
+<!-- ENHANCEMENT: COLLAPSE EMERGENCY TRAINER -->
+
+<div class="enh-trainer" id="collapseTrainer">
+
+    <p class="eyebrow">INCIDENT NAVIGATOR</p>
+
+    <h3>Chest Pain & Collapse Navigator</h3>
+
+    <p>
+        Practice scenario: A crewmate reports chest pain
+        and suddenly collapses.
+    </p>
+
+    <p class="enh-urgent">
+        Potentially life-threatening emergency:
+        Activate the onboard emergency response
+        and alert the crew medical officer immediately.
+    </p>
+
+    <p>
+        Select the observations below to review
+        the corresponding response guidance.
+    </p>
+
+    <div class="field">
+        <label for="enhResponsive">
+            Is the astronaut responsive?
+        </label>
+
+        <select id="enhResponsive">
+            <option value="">Select an answer</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="unsure">I'm not sure</option>
+        </select>
+    </div>
+
+    <div
+        class="field enh-breathing"
+        id="enhBreathingGroup"
+        hidden
+    >
+        <label for="enhBreathing">
+            Is the astronaut breathing normally?
+        </label>
+
+        <select id="enhBreathing">
+            <option value="">Select an answer</option>
+            <option value="yes">Yes</option>
+            <option value="no">No or only gasping</option>
+            <option value="unsure">I'm not sure</option>
+        </select>
+    </div>
+
+    <button type="button" id="enhShowEmergency">
+        Show Next Steps
+    </button>
+
+    <div
+        id="enhEmergencyResult"
+        class="enh-result"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+</div>
+
+
+    <p
+        id="emergencyStatus"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+</section>
+</section>
+    <section class="route-page " data-page="assistant" aria-labelledby="title-assistant" hidden>
+  <div class="page-heading"><div><p class="eyebrow">ASTROGUARDIAN / ASSISTANT</p><h1 id="title-assistant" tabindex="-1">A familiar face, far from home.</h1><p>Meet ASTRA: a space joke, a friendly chat, or a little help with your workspace.</p></div><span class="page-index">10 / 10</span></div>
+  <div class="assistant-intro"><div><p class="tiny-label">COMPANY, ON YOUR TERMS</p><h2>Mission talk.<br>Or just a little small talk.</h2><p>Tell ASTRA about your favourite music, ask for a joke, or take a break from the day. Open a conversation whenever you like.</p><div class="hero-actions"><button class="button button-primary" type="button" data-open-assistant data-liquid-metal>Talk to ASTRA</button></div><p class="muted">Settle into your orbit. Friendly check-ins and animations follow your preferences.</p></div><img src="assets/astra-companion-3d.png" alt="ASTRA, your astronaut companion" width="300" height="300"></div><div id="assistantChatHome" hidden><section class="panel astra-panel" id="astraAssistant">
+
+    <p class="eyebrow">YOUR ONBOARD COMPANION</p>
 
     <div class="astra-heading">
-        <div class="astra-avatar">🤖</div>
+        <img class="astra-avatar" src="assets/astra-companion-3d.png" alt="ASTRA astronaut companion" width="72" height="72">
 
         <div>
             <h2>ASTRA Assistant</h2>
@@ -955,13 +1210,13 @@
             <input
                 id="astraQuestion"
                 type="text"
-                placeholder="Ask about your health records..."
+                placeholder="Tell me a joke, or ask me anything…"
                 maxlength="250"
                 autocomplete="off"
                 required
             >
 
-            <button type="submit" id="astraSend">
+            <button type="submit" id="astraSend" data-liquid-metal>
                 Send
             </button>
         </div>
@@ -1005,7 +1260,7 @@
         role="alert"
         hidden
     >
-        <h3>Emergency Support Demonstration</h3>
+        <h3>Emergency Support</h3>
 
         <p>
             Alert your designated crew medical
@@ -1013,367 +1268,18 @@
             onboard emergency procedures.
         </p>
 
-        <p>
-            This prototype does not send emergency
-            alerts, contact mission control,
-            diagnose conditions, or provide treatment.
-        </p>
     </div>
 
-    <p class="astra-disclaimer">
-        Educational prototype. Use fictional health
-        data only. Voice recognition may use an online
-        service depending on your browser.
-    </p>
+    <details class="astra-disclaimer">
+        <summary>About ASTRA</summary>
+        <p>Typed conversations use local scripted replies. ASTRA has no connected AI model or clinical assessment capability. Voice recognition may use an online service depending on your browser.</p>
+    </details>
 
+</section></div>
 </section>
-
-
-<!-- =====================================
-     STAGE 8: WELLNESS MISSIONS
-     ===================================== -->
-
-<section class="panel wellness-panel" id="wellnessPanel">
-
-    <p class="eyebrow">
-        MISSION WELLNESS PROGRAM
-    </p>
-
-    <h2>Daily Wellness Missions</h2>
-
-    <p class="muted">
-        Complete educational activities to
-        earn your daily mission badge.
-    </p>
-
-    <div class="wellness-progress">
-
-        <p id="wellnessProgressText">
-            0 of 3 missions completed
-        </p>
-
-        <div class="wellness-progress-track">
-            <div id="wellnessProgressBar"></div>
-        </div>
-
-    </div>
-
-    <div class="wellness-missions">
-
-        <article class="wellness-task">
-
-            <h3>1. Daily Health Check-In</h3>
-
-            <p>
-                Record today's fictional health
-                measurements using AstroGuardian.
-            </p>
-
-            <strong id="wellnessRecordStatus">
-                Not completed
-            </strong>
-
-        </article>
-
-        <article class="wellness-task">
-
-            <h3>2. Review Your Health Trends</h3>
-
-            <p>
-                Review how measurements have
-                changed across previous check-ins.
-            </p>
-
-            <button
-                type="button"
-                id="wellnessReviewTrend"
-            >
-                Review Trends
-            </button>
-
-            <strong id="wellnessTrendStatus">
-                Not completed
-            </strong>
-
-        </article>
-
-        <article class="wellness-task">
-
-            <h3>3. Explore the Human Body</h3>
-
-            <p>
-                Explore a spaceflight health topic
-                using the interactive body map.
-            </p>
-
-            <button
-                type="button"
-                id="wellnessExploreBody"
-            >
-                Open Body Explorer
-            </button>
-
-            <strong id="wellnessBodyStatus">
-                Not completed
-            </strong>
-
-        </article>
-
-    </div>
-
-    <div class="wellness-badge">
-
-        <h3>🏅 Mission Achievement</h3>
-
-        <p id="wellnessBadge">
-            Complete all three missions to
-            unlock the Mission Health Explorer badge.
-        </p>
-
-    </div>
-
-    <p
-        id="wellnessStatus"
-        role="status"
-        aria-live="polite"
-    ></p>
-
-    <p class="muted">
-        Wellness missions are educational activities,
-        not medical treatment or prescribed exercise.
-    </p>
-
-</section>
-
-<!-- OFFLINE CAPABILITY STATUS -->
-
-<section class="panel offline-panel">
-
-    <h2>Offline Mission Support</h2>
-
-    <p>
-        AstroGuardian can cache its application
-        files so the demo can be opened again
-        without a network connection.
-    </p>
-
-    <p
-        id="offlineStatus"
-        role="status"
-        aria-live="polite"
-    >
-        Checking offline availability...
-    </p>
-
-    <p class="muted">
-        Voice recognition and external NASA research
-        links may still require internet access.
-    </p>
-
-</section>
-
-            <section class="panel">
-
-                <h2>Daily Health Measurements</h2>
-
-                <p class="muted">
-                    Enter your measurements below.
-                    All fields except notes are required.
-                </p>
-
-                <form id="healthForm">
-
-                    <div class="form-grid">
-
-                        <div class="field">
-                            <label for="recordDate">
-                                Measurement Date
-                            </label>
-                            <input
-                                type="date"
-                                id="recordDate"
-                                required
-                            >
-                        </div>
-
-                        <div class="field">
-                            <label for="heartRate">
-                                Heart Rate (bpm)
-                            </label>
-                            <input
-                                type="number"
-                                id="heartRate"
-                                min="1"
-                                max="300"
-                                step="1"
-                                placeholder="e.g. 76"
-                                required
-                            >
-                        </div>
-
-                        <div class="field">
-                            <label for="temperature">
-                                Body Temperature (°C)
-                            </label>
-                            <input
-                                type="number"
-                                id="temperature"
-                                min="20"
-                                max="50"
-                                step="0.1"
-                                placeholder="e.g. 36.7"
-                                required
-                            >
-                        </div>
-
-                        <div class="field">
-                            <label for="sleepHours">
-                                Sleep Duration (hours)
-                            </label>
-                            <input
-                                type="number"
-                                id="sleepHours"
-                                min="0"
-                                max="24"
-                                step="0.1"
-                                placeholder="e.g. 7.5"
-                                required
-                            >
-                        </div>
-
-                        <div class="field">
-                            <label for="exerciseMinutes">
-                                Exercise Duration (minutes)
-                            </label>
-                            <input
-                                type="number"
-                                id="exerciseMinutes"
-                                min="0"
-                                max="1440"
-                                step="1"
-                                placeholder="e.g. 40"
-                                required
-                            >
-                        </div>
-
-                        <div class="field">
-                            <label for="mood">
-                                Mood / Well-being
-                            </label>
-                            <select id="mood" required>
-                                <option value="">
-                                    Select your mood
-                                </option>
-                                <option value="1">
-                                    1 - Very low
-                                </option>
-                                <option value="2">
-                                    2 - Low
-                                </option>
-                                <option value="3">
-                                    3 - Neutral
-                                </option>
-                                <option value="4">
-                                    4 - Good
-                                </option>
-                                <option value="5">
-                                    5 - Very good
-                                </option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="field notes-field">
-                        <label for="notes">
-                            Additional Notes (optional)
-                        </label>
-
-                        <textarea
-                            id="notes"
-                            rows="3"
-                            maxlength="200"
-                            placeholder="Any observations today?"
-                        ></textarea>
-                    </div>
-
-                    <button type="submit" class="primary-button">
-                        Save Health Record
-                    </button>
-
-                    <p
-                        id="statusMessage"
-                        class="status"
-                        role="status"
-                        aria-live="polite"
-                    ></p>
-
-                </form>
-
-            </section>
-
-            <!-- SAVED HEALTH RECORDS -->
-            <section class="panel history-panel">
-
-                <div class="section-heading">
-                    <h2>Health History</h2>
-                    <span id="recordCount">
-                        0 records
-                    </span>
-                </div>
-
-                <p id="emptyState" class="muted">
-                    No health records saved yet.
-                </p>
-
-                <ul
-                    id="recordsList"
-                    class="records-list"
-                ></ul>
-
-            </section>
-
-            <p class="disclaimer">
-                Demo application only. Use fictional
-                measurements, not real medical records.
-                This software does not provide diagnosis
-                or emergency medical care.
-            </p>
-
-        </section>
-
-    </main>
-
-    
-
-
-
-
-<!-- LOCAL CHART LIBRARY -->
-<script src="./vendor/chart.umd.min.js"></script>
-
-<!-- STAGE 2 -->
-<script src="script.js"></script>
-
-<!-- STAGE 3 -->
-<script src="dashboard.js"></script>
-
-<!-- STAGE 4 -->
-<script src="insights.js"></script>
-
-<!-- STAGE 5 -->
-<script src="bodymap.js"></script>
-
-<!-- STAGE 6 -->
-<script src="astra.js"></script>
-
-<!-- STAGE 7 -->
-<script src="emergency.js"></script>
-
-<!-- STAGE 8 -->
-<script src="wellness.js"></script>
-
-<script src="enhancements.js"></script>
-
+  </main>
+  <footer class="site-footer"><div><a href="#/overview" class="footer-brand">astroguardian<span>✦</span></a><p>YOUR SPACE FOR WELL-BEING BEYOND EARTH</p></div><p>Personal records and wellness guidance. Follow your crew’s approved medical procedures.</p><a href="#/offline">Offline support</a></footer>
+  <noscript><p class="noscript-notice">Enable JavaScript to use the navigation, local health records, and companion.</p></noscript>
+  <script src="vendor/chart.umd.min.js"></script><script src="script.js"></script><script src="dashboard.js"></script><script src="insights.js"></script><script src="bodymap.js"></script><script src="astra.js"></script><script src="emergency.js"></script><script src="wellness.js"></script><script src="enhacement.js"></script><script src="navigation.js"></script><script src="companion.js"></script><script src="components/ui/spotlight-card.js"></script><script src="components/ui/liquid-metal-button.js"></script>
 </body>
 </html>

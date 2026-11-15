@@ -36,7 +36,7 @@ const metricSettings = {
     sleepHours: {
         label: "Sleep Duration",
         unit: "hours",
-        color: "#aa9dff"
+        color: "#a9cfff"
     },
 
     exerciseMinutes: {
@@ -130,7 +130,7 @@ function renderHealthDashboard() {
     if (typeof Chart === "undefined") {
         chartBox.hidden = true;
         chartMessage.textContent =
-            "Chart.js could not load. Check your internet connection.";
+            "The local chart library could not load. Reload the application.";
         return;
     }
 
@@ -276,10 +276,10 @@ rangeSelect.addEventListener(
 
 // 8. LOAD DASHBOARD WHEN MISSION STARTS
 
-startButton.addEventListener(
-    "click",
-    renderHealthDashboard
-);
+window.addEventListener("astroguardian:page-changed", function (event) {
+    if (event.detail.page === "trends") renderHealthDashboard();
+});
+renderHealthDashboard();
 
 
 // 9. UPDATE DASHBOARD AFTER RECORD CHANGES

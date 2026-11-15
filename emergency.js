@@ -127,8 +127,7 @@ function renderEmergencyChecklist() {
     });
 
     emergencyStatus.textContent =
-        "Training checklist displayed. " +
-        "No emergency message has been transmitted.";
+        "Incident checklist ready.";
 }
 
 
@@ -136,17 +135,16 @@ function renderEmergencyChecklist() {
 
 function openEmergencySupport() {
 
+    openAstroPage("emergency");
+
     emergencyPanel.hidden = false;
 
     renderEmergencyChecklist();
 
-    emergencyPanel.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    emergencyScenario.focus({ preventScroll: true });
 }
 
-emergencyOpen.addEventListener(
+emergencyOpen?.addEventListener(
     "click",
     openEmergencySupport
 );
@@ -188,10 +186,9 @@ emergencySpeakButton.addEventListener(
         }
 
         const message =
-            "Training simulation only. " +
+            "Emergency support. " +
             scenario.title + ". " +
-            scenario.steps.join(". ") +
-            ". This application has not contacted anyone.";
+            scenario.steps.join(". ");
 
         window.speechSynthesis.cancel();
 
@@ -204,7 +201,7 @@ emergencySpeakButton.addEventListener(
         window.speechSynthesis.speak(speech);
 
         emergencyStatus.textContent =
-            "Reading the training checklist aloud.";
+            "Reading the incident checklist aloud.";
     }
 );
 
@@ -215,15 +212,18 @@ emergencyClose.addEventListener(
     "click",
     function () {
 
-        emergencyPanel.hidden = true;
-
         if ("speechSynthesis" in window) {
             window.speechSynthesis.cancel();
         }
 
-        emergencyOpen.focus();
+        openAstroPage("overview");
     }
 );
+
+window.addEventListener("astroguardian:page-changed", function (event) {
+    if (event.detail?.page === "emergency") renderEmergencyChecklist();
+    else if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+});
 
 
 // 8. ALLOW ASTRA TO OPEN EMERGENCY SUPPORT

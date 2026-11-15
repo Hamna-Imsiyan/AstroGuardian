@@ -168,7 +168,7 @@ function getLatestBodyMapRecord() {
 
     // healthRecords comes from Stage 2
 
-    if (!Array.isArray(healthRecords)) {
+    if (typeof healthRecords === "undefined" || !Array.isArray(healthRecords)) {
         return null;
     }
 
@@ -351,4 +351,168 @@ window.addEventListener(
 
 // 10. DISPLAY THE DEFAULT TOPIC
 
+// The supplied artwork is a flat silhouette. Turning the image gives a useful
+// front/back viewing interaction without implying a three-dimensional scan.
+function initializeBodyViewer() {
+    const figure = bodyMap.querySelector(".body-figure");
+    const visual = bodyMap.querySelector(".bodymap-visual");
+
+    if (!figure || !visual || figure.dataset.viewerReady) return;
+    figure.dataset.viewerReady = "true";
+    visual.classList.add("body-viewer");
+
+    const oldArtwork = figure.querySelector("svg");
+    if (oldArtwork) oldArtwork.remove();
+    const oldCaption = visual.querySelector(".bodymap-caption");
+    if (oldCaption) oldCaption.remove();
+
+    const header = document.createElement("div");
+    header.className = "body-viewer-header";
+    const label = document.createElement("span");
+    label.textContent = "BODY EXPLORER";
+    const orientation = document.createElement("span");
+    orientation.id = "bodyOrientation";
+    orientation.setAttribute("role", "status");
+    orientation.setAttribute("aria-live", "polite");
+    header.append(label, orientation);
+    visual.prepend(header);
+
+    const image = document.createElement("img");
+    image.className = "body-reference-image";
+    image.src = "assets/body-silhouette.png";
+    image.alt = "Human silhouette supplied for the educational body explorer";
+    image.draggable = false;
+    image.width = 639;
+    image.height = 360;
+    figure.prepend(image);
+
+    figure.tabIndex = 0;
+    figure.setAttribute("role", "group");
+    figure.setAttribute("aria-label", "Rotate the body silhouette");
+    figure.setAttribute("aria-describedby", "bodyRotationHelp");
+
+    const help = document.createElement("p");
+    help.id = "bodyRotationHelp";
+    help.className = "body-rotation-help";
+    help.textContent = "Drag to turn · Arrow keys to rotate · Home to reset";
+
+    const controls = document.createElement("div");
+    controls.className = "body-rotation-controls";
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", "Silhouette rotation controls");
+
+    function makeControl(text, action, description) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = text;
+        button.dataset.bodyRotation = action;
+        button.setAttribute("aria-label", description || text);
+        controls.appendChild(button);
+        return button;
+    }
+
+    makeControl("↶", "left", "Rotate silhouette left by 45 degrees");
+    const frontButton = makeControl("Front", "front", "Show front orientation");
+    const backButton = makeControl("Back", "back", "Show back orientation");
+    makeControl("↷", "right", "Rotate silhouette right by 45 degrees");
+    makeControl("Reset", "reset", "Reset silhouette to front orientation");
+
+    const note = document.createElement("p");
+    note.className = "body-viewer-disclaimer";
+    note.textContent = "2D silhouette rotation · Educational illustration, not a body scan.";
+    visual.append(help, controls, note);
+
+    const pointPositions = {
+        // Keep head controls at least 56px apart in the 400px mobile viewer,
+        // including while horizontal positions converge during rotation.
+        brain: { x: 50, y: 7 },
+        eyes: { x: 46, y: 21 },
+        heart: { x: 54, y: 35 },
+        muscles: { x: 36, y: 48 },
+        bones: { x: 47, y: 75 },
+        radiation: { x: 67, y: 61 }
+    };
+    const points = Array.from(figure.querySelectorAll("button[data-system]"));
+    const pointLabels = new Map(points.map(point => [point, point.getAttribute("aria-label")]));
+    let angle = 0;
+    let drag = null;
+
+    function normalizedAngle() {
+        return ((angle % 360) + 360) % 360;
+    }
+
+    function updateRotation(announce = true) {
+        const degrees = normalizedAngle();
+        const cosine = Math.cos(degrees * Math.PI / 180);
+        const isBack = cosine < 0;
+        const isEdge = Math.abs(cosine) < 0.36;
+        figure.style.setProperty("--body-angle", angle + "deg");
+        figure.dataset.orientation = isBack ? "back" : "front";
+        figure.classList.toggle("body-edge-on", isEdge);
+        points.forEach(point => {
+            const position = pointPositions[point.dataset.system];
+            if (!position) return;
+            point.style.left = (50 + (position.x - 50) * cosine) + "%";
+            point.style.top = position.y + "%";
+            // Screen-facing labels stay legible while the silhouette turns.
+            // At side angles the accessible topic buttons below remain available.
+            point.hidden = isEdge;
+            point.setAttribute("aria-label", pointLabels.get(point) + (isBack ? " (back orientation)" : " (front orientation)"));
+        });
+        frontButton.setAttribute("aria-pressed", String(degrees === 0));
+        backButton.setAttribute("aria-pressed", String(degrees === 180));
+        if (announce) {
+            orientation.textContent = (isEdge ? "Side" : isBack ? "Back" : "Front") + " · " + Math.round(degrees) + "°";
+        }
+    }
+
+    controls.addEventListener("click", event => {
+        const button = event.target.closest("button[data-body-rotation]");
+        if (!button) return;
+        const action = button.dataset.bodyRotation;
+        if (action === "left") angle -= 45;
+        if (action === "right") angle += 45;
+        if (action === "front" || action === "reset") angle = 0;
+        if (action === "back") angle = 180;
+        updateRotation();
+    });
+
+    figure.addEventListener("keydown", event => {
+        if (event.target !== figure) return;
+        if (event.key === "ArrowLeft") angle -= 15;
+        else if (event.key === "ArrowRight") angle += 15;
+        else if (event.key === "Home") angle = 0;
+        else if (event.key === "End") angle = 180;
+        else return;
+        event.preventDefault();
+        updateRotation();
+    });
+
+    figure.addEventListener("pointerdown", event => {
+        if (drag || event.isPrimary === false) return;
+        if (event.button !== 0 || event.target.closest("button")) return;
+        drag = { pointerId: event.pointerId, startX: event.clientX, angle };
+        figure.setPointerCapture(event.pointerId);
+        figure.classList.add("is-dragging");
+    });
+    figure.addEventListener("pointermove", event => {
+        if (!drag || drag.pointerId !== event.pointerId) return;
+        angle = drag.angle + (event.clientX - drag.startX) * 0.8;
+        updateRotation(false);
+    });
+    function finishDrag(event) {
+        if (!drag || drag.pointerId !== event.pointerId) return;
+        if (event.type === "pointercancel") angle = drag.angle;
+        drag = null;
+        figure.classList.remove("is-dragging");
+        if (figure.hasPointerCapture(event.pointerId)) figure.releasePointerCapture(event.pointerId);
+        updateRotation();
+    }
+    figure.addEventListener("pointerup", finishDrag);
+    figure.addEventListener("pointercancel", finishDrag);
+    figure.addEventListener("lostpointercapture", finishDrag);
+    updateRotation();
+}
+
+initializeBodyViewer();
 renderBodyMap();

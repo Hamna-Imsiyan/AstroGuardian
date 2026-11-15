@@ -1,0 +1,110 @@
+/* Solid labels, a polished metal rim, and an offline fallback for every control. */
+.liquid-metal-button[data-liquid-metal],
+#astraSend.liquid-metal-button[data-liquid-metal] {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(128deg, #13263c 0%, #8ba8c0 8%, #effbff 14%, #5b9bbd 20%, #152c44 29%, #d3e5f3 39%, #fbffff 43%, #5cc3ed 49%, #17334f 59%, #9cbfd8 71%, #f4fcff 77%, #3c9dc7 86%, #14273d 100%);
+    color: #f1f8ff;
+    box-shadow: 0 4px 14px #0006, 0 0 0 1px #8dc4e24d, inset 0 1px 0 #e0f7ff88;
+    text-shadow: 0 1px 2px #0008;
+    cursor: pointer;
+    transform: translateY(0);
+    transition: transform .16s ease, box-shadow .2s ease;
+}
+.liquid-metal-button[data-liquid-metal]::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 2px;
+    border: 1px solid #81c5e33d;
+    border-radius: inherit;
+    background: linear-gradient(180deg, #1b2a3c, #070f1d 75%);
+    box-shadow: inset 0 1px 0 #b9e9ff14, 0 1px 3px #0009;
+    pointer-events: none;
+}
+.liquid-metal-button[data-liquid-metal]:hover,
+#astraSend.liquid-metal-button[data-liquid-metal]:hover {
+    background-color: #14273d;
+    color: #fff;
+    box-shadow: 0 6px 20px #0007, 0 0 0 1px #a6e2ff99, 0 0 22px #6cc9ff22;
+    transform: translateY(-1px);
+}
+.liquid-metal-button[data-liquid-metal]:active,
+#astraSend.liquid-metal-button[data-liquid-metal]:active {
+    color: #fff;
+    transform: translateY(1px) scale(.985);
+    box-shadow: 0 1px 5px #0007, 0 0 0 1px #a6e2ff99;
+}
+.liquid-metal-button[data-liquid-metal]:focus-visible,
+#astraSend.liquid-metal-button[data-liquid-metal]:focus-visible {
+    outline: 3px solid #b5eaff;
+    outline-offset: 4px;
+}
+.liquid-metal-button[data-liquid-metal]:disabled,
+.liquid-metal-button[data-liquid-metal][aria-disabled="true"],
+#astraSend.liquid-metal-button[data-liquid-metal]:disabled,
+#astraSend.liquid-metal-button[data-liquid-metal][aria-disabled="true"] {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none;
+}
+.liquid-metal-label {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: inherit;
+    min-width: 0;
+    color: inherit;
+    font: inherit;
+    text-shadow: inherit;
+    pointer-events: none;
+}
+.liquid-metal-canvas {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+}
+.liquid-metal-rendered > .liquid-metal-canvas { opacity: 1; }
+.liquid-metal-ripple {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c8f1ff66 0%, #83d8ff2b 34%, #8ddfff00 65%);
+    transform: translate(-50%, -50%) scale(0);
+    animation: liquid-metal-ripple .6s ease-out forwards;
+    pointer-events: none;
+}
+@keyframes liquid-metal-ripple {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: .85; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+.companion-motion-paused .liquid-metal-button,
+.companion-motion-paused .liquid-metal-ripple { animation: none !important; transition: none !important; }
+.companion-motion-paused .liquid-metal-button[data-liquid-metal]:hover,
+.companion-motion-paused .liquid-metal-button[data-liquid-metal]:active,
+.companion-motion-paused #astraSend.liquid-metal-button[data-liquid-metal]:hover,
+.companion-motion-paused #astraSend.liquid-metal-button[data-liquid-metal]:active { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    .liquid-metal-button[data-liquid-metal], #astraSend.liquid-metal-button[data-liquid-metal] { transition: none; }
+    .liquid-metal-button[data-liquid-metal]:hover,
+    .liquid-metal-button[data-liquid-metal]:active,
+    #astraSend.liquid-metal-button[data-liquid-metal]:hover,
+    #astraSend.liquid-metal-button[data-liquid-metal]:active { transform: none; }
+    .liquid-metal-ripple { display: none; animation: none; }
+}
+@media (forced-colors: active) {
+    .liquid-metal-button[data-liquid-metal], #astraSend.liquid-metal-button[data-liquid-metal] { border: 2px solid ButtonText; background: ButtonFace; color: ButtonText; box-shadow: none; text-shadow: none; }
+    .liquid-metal-button[data-liquid-metal]::after, .liquid-metal-canvas, .liquid-metal-ripple { display: none; }
+}

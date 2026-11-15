@@ -6,10 +6,6 @@
 
 // 1. GET HTML ELEMENTS
 
-const startButton = document.getElementById("startButton");
-const welcomeScreen = document.getElementById("welcome");
-const appSection = document.getElementById("appSection");
-
 const healthForm = document.getElementById("healthForm");
 const dateInput = document.getElementById("recordDate");
 const statusMessage = document.getElementById("statusMessage");
@@ -20,6 +16,29 @@ const emptyState = document.getElementById("emptyState");
 
 // Storage key for our application
 const STORAGE_KEY = "astroguardian_health_records_v1";
+
+const RECORD_MISSION_LOCATION_LABELS = Object.freeze({
+    station: "Space station",
+    space: "Open space (EVA)",
+    moon: "Moon base camp"
+});
+
+// Capture the environment at save time; changing the active mission later must
+// not change the location attached to a historical check-in.
+function getSelectedRecordMissionLocation() {
+    let missionLocation;
+    try {
+        missionLocation = window.AstroMission?.getLocation?.();
+    } catch {
+        // A selector is still usable if the optional mission helper is unavailable.
+    }
+
+    return [
+        missionLocation,
+        document.getElementById("missionLocation")?.value,
+        document.querySelector("[data-mission-select]")?.value
+    ].find(location => Object.hasOwn(RECORD_MISSION_LOCATION_LABELS, location));
+}
 
 // 2. GET TODAY'S LOCAL DATE
 
@@ -40,6 +59,7 @@ function getToday() {
 }
 
 function setDefaultDate() {
+    if (!dateInput) return;
     const today = getToday();
 
     dateInput.value = today;
@@ -60,7 +80,19 @@ function loadRecords() {
 
         const parsedData = JSON.parse(savedData);
 
-        return Array.isArray(parsedData) ? parsedData : [];
+        if (!Array.isArray(parsedData)) return [];
+
+        return parsedData.filter(record =>
+            record &&
+            typeof record.date === "string" &&
+            /^\d{4}-\d{2}-\d{2}$/.test(record.date) &&
+            ["heartRate", "temperature", "sleepHours", "exerciseMinutes", "mood"]
+                .every(key => typeof record[key] === "number" && Number.isFinite(record[key]))
+        ).map(record => ({
+            ...record,
+            notes: typeof record.notes === "string" ? record.notes : "",
+            ...(record.missionLocation === "transit" ? { missionLocation: "space" } : {})
+        })).sort((a, b) => b.date.localeCompare(a.date));
 
     } catch (error) {
         console.error("Could not load records:", error);
@@ -73,35 +105,33 @@ let healthRecords = loadRecords();
 // 4. DISPLAY MESSAGES
 
 function showStatus(text, type) {
-    statusMessage.textContent = text;
-    statusMessage.className = "status " + type;
+    [statusMessage, document.getElementById("historyStatus")].forEach(output => {
+        if (!output) return;
+        output.textContent = text;
+        output.className = "status " + type;
+    });
 }
 
-// 5. START THE APPLICATION
+// 5. OPEN A FEATURE PAGE BEFORE FOCUSING ITS CONTENT
 
-startButton.addEventListener("click", function () {
-
-    welcomeScreen.classList.add("hidden");
-    appSection.classList.remove("hidden");
-
-    // Keep the voice greeting from Stage 1
-    if ("speechSynthesis" in window) {
-
-        window.speechSynthesis.cancel();
-
-        const greeting = new SpeechSynthesisUtterance(
-            "Welcome, Commander. AstroGuardian is ready."
-        );
-
-        greeting.lang = "en-US";
-
-        window.speechSynthesis.speak(greeting);
+function openAstroPage(page, focusId) {
+    const path = "/" + page.replace(/^\/+/, "");
+    if (window.AstroGuardian && typeof window.AstroGuardian.navigate === "function") {
+        window.AstroGuardian.navigate(path);
+    } else {
+        window.location.hash = path;
     }
-});
+
+    if (focusId) {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.getElementById(focusId)?.focus({ preventScroll: true });
+        }));
+    }
+}
 
 // 6. SAVE DAILY HEALTH INFORMATION
 
-healthForm.addEventListener("submit", function (event) {
+healthForm?.addEventListener("submit", function (event) {
 
     // Prevent the browser from reloading the page
     event.preventDefault();
@@ -112,9 +142,12 @@ healthForm.addEventListener("submit", function (event) {
     }
 
     // Read the values from the form
+    const missionLocation = getSelectedRecordMissionLocation();
     const newRecord = {
 
         date: dateInput.value,
+
+        ...(missionLocation ? { missionLocation } : {}),
 
         heartRate: Number(
             document.getElementById("heartRate").value
@@ -216,16 +249,17 @@ healthForm.addEventListener("submit", function (event) {
 // 7. DISPLAY SAVED HEALTH RECORDS
 
 function displayRecords() {
+    if (!recordsList) return;
 
     // Remove previous list items
     recordsList.replaceChildren();
 
     // Update total record count
-    recordCount.textContent =
-        healthRecords.length + " saved records";
+    if (recordCount) recordCount.textContent =
+        healthRecords.length + (healthRecords.length === 1 ? " saved record" : " saved records");
 
     // Show an empty message if needed
-    emptyState.hidden = healthRecords.length > 0;
+    if (emptyState) emptyState.hidden = healthRecords.length > 0;
 
     healthRecords.forEach(function (record) {
 
@@ -261,6 +295,13 @@ function displayRecords() {
         );
 
         card.appendChild(dateTitle);
+
+        const location = document.createElement("p");
+        location.className = "record-mission-location";
+        location.textContent = Object.hasOwn(RECORD_MISSION_LOCATION_LABELS, record.missionLocation)
+            ? "Mission: " + RECORD_MISSION_LOCATION_LABELS[record.missionLocation]
+            : "Location not recorded";
+        card.appendChild(location);
         card.appendChild(details);
 
         // Display notes only when provided
@@ -287,7 +328,7 @@ function displayRecords() {
 
 // 8. DELETE A RECORD
 
-recordsList.addEventListener("click", function (event) {
+recordsList?.addEventListener("click", function (event) {
 
     const button = event.target.closest("button[data-date]");
 
@@ -341,3 +382,11 @@ recordsList.addEventListener("click", function (event) {
 // 9. DISPLAY EXISTING RECORDS ON LOAD
 
 displayRecords();
+
+// Keep tabs on the same device consistent after a record is saved or deleted.
+window.addEventListener("storage", function (event) {
+    if (event.key === STORAGE_KEY || event.key === null) {
+        healthRecords = loadRecords();
+        displayRecords();
+    }
+});

@@ -105,7 +105,7 @@ function astraGetRecords() {
 
     // healthRecords was created in Stage 2
 
-    if (!Array.isArray(healthRecords)) {
+    if (typeof healthRecords === "undefined" || !Array.isArray(healthRecords)) {
         return [];
     }
 
@@ -150,9 +150,7 @@ function astraLatestMeasurement(metric, records) {
 
     return "Your latest recorded " + metric.label +
         " was " + value + " " + metric.unit +
-        " on " + latest.date +
-        ". This is a recorded measurement, " +
-        "not a medical assessment.";
+        " on " + latest.date + ".";
 }
 
 
@@ -206,8 +204,7 @@ function astraExplainTrend(metric, records) {
         ". Your latest value is " +
         Math.abs(difference).toFixed(1) + " " +
         metric.unit + " " + direction +
-        " that average. This comparison is " +
-        "informational and cannot diagnose a condition.";
+        " that average.";
 }
 
 
@@ -228,8 +225,7 @@ function astraHealthSummary(records) {
         " degrees Celsius. Sleep: " + latest.sleepHours +
         " hours. Exercise: " + latest.exerciseMinutes +
         " minutes. Mood: " + latest.mood +
-        " out of five. These are recorded measurements, " +
-        "not a health diagnosis.";
+        " out of five.";
 }
 
 
@@ -290,6 +286,97 @@ function astraSpaceEducation(question) {
 
 // 10. RECOGNIZE USER QUESTIONS
 
+// A small, local conversation library. ASTRA does not send typed chat to an AI
+// service, pretend to understand unrestricted questions, or store conversations.
+const astraJokes = [
+    "Why did the astronaut bring a pencil? To draw their own conclusions in space. What is your best terrible joke?",
+    "I tried to organize a party on the Moon. Great view, very little atmosphere. What would be on your party playlist?",
+    "My space sandwich floated away. I guess lunch has left the station. What meal are you looking forward to back on Earth?",
+    "Why did the robot take a holiday? Too many working orbits. If you had a free afternoon anywhere, where would you go?",
+    "I asked the stars for a joke, but they were all a little distant. Your turn: puns, dad jokes, or no jokes at all?"
+];
+let astraJokeIndex = 0;
+let astraConversationTopic = "";
+
+function astraCompanionAnswer(question) {
+    if (/\b(joke|jokes|pun|puns|make me laugh|something funny)\b/.test(question)) {
+        const joke = astraJokes[astraJokeIndex % astraJokes.length];
+        astraJokeIndex += 1;
+        astraConversationTopic = "jokes";
+        window.dispatchEvent(new CustomEvent("astroguardian:companion-motion", { detail: { action: "jump" } }));
+        return joke;
+    }
+    if (/\b(wave|waving|jump|jumping|float|floating)\b/.test(question) &&
+        !/\b(blood|pressure|heart|temperature|symptom|dizzy|pain)\b/.test(question)) {
+        const action = /\b(jump|jumping)\b/.test(question) ? "jump" : /\b(float|floating)\b/.test(question) ? "float" : "wave";
+        window.dispatchEvent(new CustomEvent("astroguardian:companion-motion", { detail: { action } }));
+        return action === "wave" ? "A little wave from your station companion! What has been the highlight of your day?" :
+            action === "jump" ? "One small hop for ASTRA! What would you like to chat about?" :
+                "Taking a little float around my corner of the station. If you could float past any place on Earth, where would it be?";
+    }
+    if (/\b(who are you|about yourself|are you real|are you human|are you ai|your name)\b/.test(question)) {
+        return "I'm ASTRA, a virtual station companion with local scripted replies. I can share jokes, ask about your day, and help you explore your saved records. What do you enjoy doing in your downtime?";
+    }
+    if (/\b(lonely|loneliness|miss home|homesick|miss my family|alone|someone to talk|keep me company)\b/.test(question)) {
+        astraConversationTopic = "home";
+        return "Being far from familiar people and places can feel lonely. We can chat for a bit. What is one small thing from home you would like to tell me about: a person, a place, or a favourite routine? A message to someone you trust or a chat with a crewmate can help you feel connected, too.";
+    }
+    if (/\b(how are you|how is your day|how's your day)\b/.test(question)) {
+        return "My systems are ready for a chat! I don't experience days the way you do, but I can ask about yours. What was a small good moment today?";
+    }
+    if (/\b(ask me|ask about me|get to know me|myself|about my day)\b/.test(question)) {
+        astraConversationTopic = "day";
+        return "Let's talk about you beyond the mission checklist. If you had an entirely free afternoon, what would you choose to do?";
+    }
+    if (/\b(bored|boring|chat|talk|conversation|hang out)\b/.test(question)) {
+        astraConversationTopic = "day";
+        return "Let's take a small conversation break. Would you rather see a sunrise from a mountain, listen to rain by a window, or spend an afternoon by the sea? Tell me which one and why.";
+    }
+    if (/\b(music|song|playlist|sing|band)\b/.test(question)) {
+        astraConversationTopic = "music";
+        return "Music can carry so many memories. What song would you put first on a playlist for the journey home, and what does it remind you of?";
+    }
+    if (/\b(movie|film|book|read|hobby|hobbies|game|games)\b/.test(question)) {
+        astraConversationTopic = "hobbies";
+        return "A good story or a favourite hobby sounds like a nice break. What do you keep coming back to, and what do you enjoy most about it?";
+    }
+    if (/\b(favourite|favorite|enjoy|i like|i love|i prefer)\b/.test(question)) {
+        astraConversationTopic = "interests";
+        return "Thanks for sharing a little of what you enjoy. What is a favourite memory connected with that?";
+    }
+    if (/\b(thank you|thanks|that was nice|that was funny)\b/.test(question)) {
+        return "You're welcome. I'm here whenever you want a joke, a quick conversation, or help finding your way around AstroGuardian.";
+    }
+    if (/\b(hello|hey|hi|good morning|good evening)\b/.test(question)) {
+        astraConversationTopic = "day";
+        window.dispatchEvent(new CustomEvent("astroguardian:companion-motion", { detail: { action: "wave" } }));
+        return "Hello, Commander! Good to have you here. What has been the most interesting part of your day? You can also ask for a joke or ask me to wave, jump, or float.";
+    }
+    if (/\b(great|happy|excited|good day|doing well|i am fine|i'm fine)\b/.test(question)) {
+        astraConversationTopic = "day";
+        return "That sounds like a moment worth keeping. What made the day feel that way?";
+    }
+    if (/\b(hard day|rough day|sad|frustrated|tough day|bad day)\b/.test(question)) {
+        astraConversationTopic = "day";
+        return "That sounds like a difficult day. If you feel like talking, what happened? You could also take a quiet break, share a moment with a crewmate, or ask me for a very silly space joke.";
+    }
+    // Give one general follow-up rather than claiming to understand arbitrary text.
+    if (astraConversationTopic && !/\b(heart|pulse|temperature|sleep|exercise|activity|workout|mood|health|record|summary|trend|change|compare|bone|radiation|vision|muscle|spaceflight|space mission|help|what can you do)\b/.test(question)) {
+        const topic = astraConversationTopic;
+        astraConversationTopic = "";
+        const followUps = {
+            home: "Thank you for telling me about home. What is a little routine from there that you could bring into your day on the station?",
+            music: "That sounds like a personal choice. What memory does that music bring to mind?",
+            hobbies: "What first got you interested in it?",
+            interests: "If you could share that experience with someone back home, who would you choose?",
+            jokes: "A sense of humour belongs in the mission kit. Want another joke, or shall we talk about something you enjoy?",
+            day: "Thanks for sharing. What are you looking forward to when you have some time to yourself?"
+        };
+        return followUps[topic] || null;
+    }
+    return null;
+}
+
 function astraGenerateAnswer(userQuestion) {
 
     const question = userQuestion
@@ -306,23 +393,26 @@ function astraGenerateAnswer(userQuestion) {
     if (emergencyWords.test(question)) {
 
         astraEmergency.hidden = false;
-        
+
         // Open the Stage 7 emergency support panel
     window.dispatchEvent(
         new Event("astroguardian:emergency-request")
     );
 
-        return "Emergency support requested. " +
+        return "Emergency support is open. " +
             "Alert your designated crew medical officer " +
             "and follow approved onboard emergency " +
-            "procedures immediately. The emergency " +
-            "information panel is now visible. " +
-            "This prototype has not contacted anyone.";
+            "procedures immediately.";
     }
 
     // Hide the emergency demonstration panel
     // when another kind of question is asked.
     astraEmergency.hidden = true;
+
+    const companionAnswer = astraCompanionAnswer(question);
+    if (companionAnswer) {
+        return companionAnswer;
+    }
 
 
     // Questions about spaceflight science
@@ -390,20 +480,12 @@ function astraGenerateAnswer(userQuestion) {
         question.includes("hello") ||
         question.includes("hi astra")
     ) {
-        return "Hello, Commander! You can ask me " +
-            "about your latest measurements, " +
-            "sleep or heart-rate trends, " +
-            "or selected spaceflight health topics. " +
-            "I can also display emergency support " +
-            "information when requested.";
+        return "I can share a space joke, ask about your day or hobbies, wave, jump, and float. I can also explain your saved measurements, compare recorded trends, or open emergency support. Try 'Tell me a joke', 'Ask me about myself', or 'What is my latest heart rate?'";
     }
 
 
     // Unknown question
-    return "I haven't learned how to answer " +
-        "that question yet. Try asking about " +
-        "your latest heart rate, sleep trend, " +
-        "health summary or spaceflight hazards.";
+    return "I'm not sure how to answer that yet. You can ask for a joke, tell me about your favourite music or hobby, or ask about your saved health records. What would you like to try?";
 }
 
 
@@ -412,7 +494,7 @@ function astraGenerateAnswer(userQuestion) {
 function astraSpeak(text) {
 
     // Only speak when the user enabled voice replies
-    if (!astraSpeakReplies.checked) {
+    if (!astraSpeakReplies.checked || document.hidden || !astraAssistant.getClientRects().length) {
         return;
     }
 
@@ -617,8 +699,19 @@ astraStopSpeaking.addEventListener("click", function () {
 
 addAstraMessage(
     "bot",
-    "Welcome, Commander! I'm ASTRA, your " +
-    "astronaut health-monitoring assistant. " +
-    "Ask about your saved health records, " +
-    "recent trends, or spaceflight health topics."
+    "Hello, Commander. Ready for a little company? Tell me about your day, or ask for a space joke."
 );
+
+// Closing support or leaving the tab always ends voice activity.
+function astraStopVoice() {
+    if (astraRecognition && astraListening) astraRecognition.abort();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+}
+window.addEventListener("astroguardian:assistant-closed", astraStopVoice);
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) astraStopVoice();
+});
+astraSpeakReplies.addEventListener("change", function () {
+    if (!astraSpeakReplies.checked && "speechSynthesis" in window) window.speechSynthesis.cancel();
+});
+window.AstraSupport = { ask: askAstra, stopVoice: astraStopVoice };
