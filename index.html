@@ -153,6 +153,84 @@
         <ol id="emergencySteps"></ol>
 
     </div>
+    
+    
+<!-- ENHANCEMENT: COLLAPSE EMERGENCY TRAINER -->
+
+<div class="enh-trainer" id="collapseTrainer">
+
+    <p class="eyebrow">INTERACTIVE EMERGENCY TRAINING</p>
+
+    <h3>Chest Pain & Collapse Navigator</h3>
+
+    <p>
+        Scenario: A crewmate reports chest pain
+        and suddenly collapses.
+    </p>
+
+    <p class="enh-urgent">
+        Potentially life-threatening emergency:
+        Activate the onboard emergency response
+        and alert the crew medical officer immediately.
+        Do not wait for this simulation.
+    </p>
+
+    <p>
+        ASTRA cannot determine the cause of a
+        collapse. Select observations to explore
+        an example response pathway.
+    </p>
+
+    <div class="field">
+        <label for="enhResponsive">
+            Is the astronaut responsive?
+        </label>
+
+        <select id="enhResponsive">
+            <option value="">Select an answer</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="unsure">I'm not sure</option>
+        </select>
+    </div>
+
+    <div
+        class="field enh-breathing"
+        id="enhBreathingGroup"
+        hidden
+    >
+        <label for="enhBreathing">
+            Is the astronaut breathing normally?
+        </label>
+
+        <select id="enhBreathing">
+            <option value="">Select an answer</option>
+            <option value="yes">Yes</option>
+            <option value="no">No or only gasping</option>
+            <option value="unsure">I'm not sure</option>
+        </select>
+    </div>
+
+    <button type="button" id="enhShowEmergency">
+        Show Next Training Guidance
+    </button>
+
+    <div
+        id="enhEmergencyResult"
+        class="enh-result"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+    <p class="enh-small">
+        Educational simulation only. Not an approved
+        NASA emergency protocol. Real crew actions
+        require mission-specific training, equipment
+        and approved procedures.
+    </p>
+
+</div>
+
 
     <p
         id="emergencyStatus"
@@ -168,6 +246,221 @@
     </p>
 
 </section>
+
+
+<!-- =====================================
+     ASTROGUARDIAN ENHANCEMENT FEATURES
+     ===================================== -->
+
+<section class="panel enh-panel" id="missionTools">
+
+    <p class="eyebrow">
+        ASTROGUARDIAN / MISSION ASSISTANCE
+    </p>
+
+    <h2>Mission Health Assistant</h2>
+
+    <p class="muted">
+        Configure your mission environment,
+        learn how to collect measurements,
+        understand recorded changes and
+        schedule daily check-ins.
+    </p>
+
+    <!-- 1. MISSION ENVIRONMENT -->
+
+    <div class="enh-section">
+
+        <h3>1. Mission Environment</h3>
+
+        <label for="enhMission">
+            Current Mission Location
+        </label>
+
+        <select id="enhMission">
+
+            <option value="station">
+                International Space Station
+            </option>
+
+            <option value="transit">
+                Deep-Space Spacecraft
+            </option>
+
+            <option value="moon">
+                Lunar Base Camp
+            </option>
+
+        </select>
+
+        <div class="enh-info">
+            <h4 id="enhMissionTitle"></h4>
+            <p id="enhMissionInfo"></p>
+            <p id="enhMissionFocus"></p>
+        </div>
+
+        <a
+            href="https://www.nasa.gov/hrp/hazards/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            NASA: Human Spaceflight Hazards
+        </a>
+
+    </div>
+
+    <!-- 2. MEASUREMENT GUIDANCE -->
+
+    <div class="enh-section">
+
+        <h3>2. Guided Health Measurements</h3>
+
+        <p class="muted">
+            Learn why a measurement matters
+            and how to record it correctly.
+        </p>
+
+        <label for="enhMetric">
+            Select Health Indicator
+        </label>
+
+        <select id="enhMetric">
+
+            <option value="heartRate">Heart Rate</option>
+            <option value="temperature">Temperature</option>
+            <option value="sleepHours">Sleep Duration</option>
+            <option value="exerciseMinutes">Exercise</option>
+            <option value="mood">Mood</option>
+
+        </select>
+
+        <div class="enh-info">
+
+            <h4>Why does it matter?</h4>
+            <p id="enhWhy"></p>
+
+            <h4>How should it be measured?</h4>
+            <p id="enhHow"></p>
+
+            <h4>What if the reading is unexpected?</h4>
+            <p id="enhNext"></p>
+
+        </div>
+
+        <button
+            type="button"
+            id="enhGoToForm"
+        >
+            Go to Health Check-In Form
+        </button>
+
+    </div>
+
+    <!-- 3. PERSONALIZED INTERPRETATION -->
+
+    <div class="enh-section">
+
+        <h3>3. Understand Your Recorded Changes</h3>
+
+        <p class="muted">
+            Compare the selected indicator with
+            your previous three check-ins.
+        </p>
+
+        <div
+            id="enhInterpretation"
+            class="enh-info"
+            role="status"
+        >
+            Save health records to compare trends.
+        </div>
+
+        <p class="enh-small">
+            A recorded change does not necessarily
+            mean a medical abnormality. Symptoms
+            and clinical context must be assessed
+            using approved medical guidance.
+        </p>
+
+    </div>
+
+    <!-- 4. DAILY REMINDERS -->
+
+    <div class="enh-section">
+
+        <h3>4. Daily Measurement Reminder</h3>
+
+        <p class="muted">
+            Choose when AstroGuardian should
+            remind you to complete your daily
+            health check-in.
+        </p>
+
+        <label for="enhReminderTime">
+            Reminder Time (device local time)
+        </label>
+
+        <input
+            type="time"
+            id="enhReminderTime"
+            value="09:00"
+        >
+
+        <button
+            type="button"
+            id="enhSaveReminder"
+        >
+            Save Reminder
+        </button>
+
+        <p
+            id="enhReminderStatus"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <div
+            id="enhReminderBanner"
+            class="enh-reminder"
+            hidden
+        >
+            <strong>
+                Daily Health Check-In Reminder
+            </strong>
+
+            <p>
+                Your scheduled check-in is due.
+                Open the health form to record
+                your measurements.
+            </p>
+
+            <button
+                type="button"
+                id="enhOpenCheckIn"
+            >
+                Open Health Form
+            </button>
+
+            <button
+                type="button"
+                id="enhDismissReminder"
+            >
+                Dismiss for Today
+            </button>
+
+        </div>
+
+        <p class="enh-small">
+            Reminders work while this application
+            is open or when you return to it.
+            This prototype cannot guarantee alerts
+            while the browser is closed.
+        </p>
+
+    </div>
+
+</section>
+
 
 <!-- STAGE 3: ASTRONAUT HEALTH DASHBOARD -->
 
@@ -1079,6 +1372,8 @@
 
 <!-- STAGE 8 -->
 <script src="wellness.js"></script>
+
+<script src="enhancements.js"></script>
 
 </body>
 </html>

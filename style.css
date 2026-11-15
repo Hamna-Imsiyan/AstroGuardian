@@ -1138,3 +1138,168 @@ button {
         transition: none;
     }
 }
+
+
+/* ======================================
+   ASTROGUARDIAN - ENHANCEMENT FEATURES
+   ====================================== */
+
+.enh-panel {
+    border: 1px solid #3b6785;
+}
+
+.enh-section {
+    padding: 24px 0;
+    border-bottom: 1px solid #365473;
+}
+
+.enh-section:last-child {
+    border-bottom: none;
+}
+
+.enh-section h3 {
+    color: #8fe3ff;
+    margin-bottom: 12px;
+}
+
+.enh-section h4 {
+    color: #ccecff;
+    margin: 16px 0 8px;
+}
+
+.enh-section label,
+.enh-trainer label {
+    display: block;
+    margin: 12px 0 8px;
+}
+
+.enh-section select,
+.enh-section input[type="time"],
+.enh-trainer select {
+    max-width: 440px;
+}
+
+.enh-info {
+    background: #172f4a;
+    border: 1px solid #365c78;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+}
+
+.enh-info p {
+    font-size: 14px;
+    color: #d7e8f5;
+    line-height: 1.7;
+}
+
+.enh-section button,
+.enh-trainer button {
+    padding: 12px 18px;
+    margin: 12px 0 0;
+
+    border: 1px solid #7ac8e8;
+    border-radius: 9px;
+
+    background: #1b5879;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.enh-section button:hover,
+.enh-trainer button:hover {
+    background: #28769a;
+}
+
+/* EMERGENCY NAVIGATOR */
+
+.enh-trainer {
+    margin-top: 25px;
+    padding: 22px;
+
+    background: #30232e;
+    border: 1px solid #c77480;
+    border-radius: 14px;
+}
+
+.enh-trainer h3 {
+    color: #ffd1d6;
+}
+
+.enh-urgent {
+    border-left: 4px solid #ff7788;
+    background: #542a34;
+
+    padding: 14px;
+    border-radius: 8px;
+
+    color: #ffe2e6;
+    font-weight: bold;
+}
+
+.enh-breathing {
+    margin-top: 16px;
+}
+
+.enh-result {
+    margin-top: 20px;
+    padding: 18px;
+
+    background: #142a40;
+    border: 1px solid #647f98;
+    border-radius: 12px;
+}
+
+.enh-result:empty {
+    display: none;
+}
+
+.enh-result li {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.enh-small {
+    color: #b5c5d5;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* REMINDER */
+
+.enh-reminder {
+    margin-top: 15px;
+    padding: 18px;
+
+    border: 1px solid #e0b76d;
+    border-radius: 12px;
+    background: #403424;
+}
+
+.enh-reminder strong {
+    color: #ffe1a7;
+}
+
+.enh-reminder button {
+    margin-right: 10px;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    .enh-trainer,
+    .enh-info {
+        padding: 15px;
+    }
+
+    .enh-section button {
+        width: 100%;
+    }
+
+    .enh-reminder button {
+        margin-right: 0;
+    }
+}
