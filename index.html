@@ -197,6 +197,50 @@
 </section>
 
 
+<!-- STAGE 4: PERSONALIZED HEALTH INSIGHTS -->
+
+<section class="panel insights-panel" id="insightsPanel">
+
+    <p class="eyebrow">
+        PERSONALIZED HEALTH MONITORING
+    </p>
+
+    <h2>Health Insights</h2>
+
+    <p class="muted">
+        Compare the latest measurements with the
+        previous three recorded check-ins.
+    </p>
+
+    <div class="insights-intro">
+        <h3>Monitoring Summary</h3>
+
+        <p
+            id="insightsSummary"
+            role="status"
+            aria-live="polite"
+        >
+            Loading health insights...
+        </p>
+    </div>
+
+    <!-- Automatically generated comparisons -->
+    <div
+        id="insightsComparison"
+        class="insights-grid"
+    ></div>
+
+    <p class="insights-disclaimer">
+        Research prototype only. These comparisons
+        use demonstration rules and cannot diagnose
+        medical conditions or determine astronaut
+        fitness. Follow approved mission medical
+        procedures for health concerns.
+    </p>
+
+</section>
+
+
             <section class="panel">
 
                 <h2>Daily Health Measurements</h2>
@@ -370,15 +414,20 @@
     </main>
 
     
-<!-- Chart.js library -->
+
+<!-- Chart library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
-<!-- Existing Stage 2 functionality -->
+<!-- Stage 2: Health form and data storage -->
 <script src="script.js"></script>
 
-<!-- New Stage 3 dashboard functionality -->
+<!-- Stage 3: Interactive dashboard -->
 <script src="dashboard.js"></script>
+
+<!-- Stage 4: Personalized health insights -->
+<script src="insights.js"></script>
 
 </body>
 </html>
+
 

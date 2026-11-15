@@ -384,3 +384,91 @@ button {
         height: 260px;
     }
 }
+
+
+/* ======================================
+   STAGE 4 - PERSONALIZED HEALTH INSIGHTS
+   ====================================== */
+
+.insights-panel {
+    margin-bottom: 25px;
+}
+
+.insights-intro {
+    margin-top: 22px;
+    padding: 20px;
+    background: #142f49;
+    border: 1px solid #355b79;
+    border-radius: 12px;
+}
+
+.insights-intro h3 {
+    margin: 0 0 10px;
+    color: #8ce4ff;
+}
+
+.insights-intro p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.insight-metric {
+    min-width: 0;
+    padding: 20px;
+    background: #182f4a;
+    border: 1px solid #365473;
+    border-radius: 12px;
+}
+
+.insight-metric h3 {
+    margin: 0 0 14px;
+    font-size: 17px;
+}
+
+.insight-metric p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #d2e0ef;
+}
+
+.insight-label {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.insight-change {
+    border-left: 4px solid #e9b96e;
+}
+
+.insight-change .insight-label {
+    background: #51412b;
+    color: #ffe1a6;
+}
+
+.insight-stable .insight-label {
+    background: #173e43;
+    color: #a7e8ce;
+}
+
+.insights-disclaimer {
+    color: #a7bdd2;
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+}
